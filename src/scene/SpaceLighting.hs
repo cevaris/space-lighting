@@ -203,19 +203,21 @@ draw state = do
   setLookAt (ex,ey,ez) (0,0,0) (0,cos(toDeg(ph)),0)
   
   drawGrid 5
+
+  drawCube 1 ((-1),0,0)
+  drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
   
-  drawStar 0.5 (0, 1.5, 0)
+  --drawStar 0.5 (0, 1.5, 0)
 
-  drawStarCluster (5, 1, 3)
-  drawStarCluster (5, 5, 1)
-  drawStarCluster (1, 5, 5)
+  --drawStarCluster (5, 1, 3)
+  --drawStarCluster (5, 5, 1)
+  --drawStarCluster (1, 5, 5)
 
-  drawStation 0.0 0.5 (1,0,0) (0,1,0)
-  drawStation (fToGL(gr)) 0.35 ((-1),0,0) (0,0,1)
+  --drawStation 0.0 0.5 (1,0,0) (0,1,0)
 
-  drawFighter 0.5 (0.55, 0, 0) (0,1,0) ((-1), 0,0)
-  drawFighter 0.7 (1, 0.7, 0) (1,0,0) (0,1,0)
-  drawFighter 0.5 (0,1,1) (1,1,1) (0,1,0)
+  --drawFighter 0.5 (0.55, 0, 0) (0,1,0) ((-1), 0,0)
+  --drawFighter 0.7 (1, 0.7, 0) (1,0,0) (0,1,0)
+  --drawFighter 0.5 (0,1,1) (1,1,1) (0,1,0)
 
   preservingMatrix $ do
     glWindowPos 5 30

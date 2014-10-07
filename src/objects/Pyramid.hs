@@ -43,28 +43,24 @@ drawPyramid s (x, y, z) (dx, dy, dz) (ux, uy, uz) = do
       
       renderPrimitive Triangles $ do
 
-        --color3f (105/255) (105/255) (105/255)
         color3f (192/255) (192/255) (192/255)
+        
         -- Front
-        -- color3f 1 0 0
         drawVertex3f  0 1 0
         drawVertex3f (-1) (-1) 1
         drawVertex3f 1 (-1) 1
    
         -- Right
-        -- color3f 0 0 1
         drawVertex3f 0 1 0
         drawVertex3f 1 (-1) 1
         drawVertex3f 1 (-1) (-1)
    
         -- Back
-        -- color3f 0 1 0
         drawVertex3f 0 1 0
         drawVertex3f 1 (-1) (-1)
         drawVertex3f (-1) (-1) (-1)
    
         -- Left
-        -- color3f 1 0 1
         drawVertex3f  0 1 0
         drawVertex3f (-1)(-1)(-1)
         drawVertex3f (-1) (-1) 1
@@ -72,7 +68,7 @@ drawPyramid s (x, y, z) (dx, dy, dz) (ux, uy, uz) = do
       renderPrimitive Quads $ do
 
         color3f 0 0 1
-        --color3f (105/255) (105/255) (105/255)
+        
         drawVertex3f 1 (-1) 1
         drawVertex3f 1 (-1) (-1)
         drawVertex3f (-1) (-1) (-1)
