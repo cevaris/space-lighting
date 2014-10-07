@@ -15,10 +15,12 @@ sphereTh d = [th | th <- [0.0..360.0], (mod' th d) == 0]
 drawLatBand :: Float -> (Float,Float) -> IO ()
 drawLatBand d (ph, th) =  do
 
+  drawNormal3f ((sin th)*(cos ph)) (sin ph) ((cos th)*(cos ph))
   drawVertex3f ((sin th)*(cos ph)) (sin ph) ((cos th)*(cos ph))
-  drawVertex3f ((sin th)*(cos (ph+d))) (sin (ph+d)) ((cos th)*(cos (ph+d)))
-  --print $ "[ph " ++ show ph ++ "] [th " ++ show th ++ "]" 
 
+  drawNormal3f ((sin th)*(cos (ph+d))) (sin (ph+d)) ((cos th)*(cos (ph+d)))
+  drawVertex3f ((sin th)*(cos (ph+d))) (sin (ph+d)) ((cos th)*(cos (ph+d)))
+  
 
 --Draw solid sphere
 --  scale (s)
@@ -26,6 +28,9 @@ drawLatBand d (ph, th) =  do
 --  at (x,y,z)
 drawSphere :: Float-> Float-> (Float, Float, Float) -> IO ()
 drawSphere s q (x, y, z) = do
+
+  let yellow   = [1.0,1.0,0.0,1.0]
+      emission = [0.0,0.0,0.01,1.0]
 
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do

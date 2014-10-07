@@ -22,6 +22,9 @@ fToGL f = (realToFrac f)::GLfloat
 toDeg :: Float -> Float
 toDeg x = x*(3.1415927/180)
 
+drawNormal3f :: Float -> Float -> Float -> IO ()
+drawNormal3f x y z = currentNormal $= Normal3 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat)
+
 drawVertex3f :: Float -> Float -> Float -> IO ()
 drawVertex3f x y z = vertex $ vertex3f x y z
 

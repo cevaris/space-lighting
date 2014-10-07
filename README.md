@@ -28,3 +28,6 @@ A Haskell OpenGL/GLUT implementation Space 3D Scene with lighting effects
     
 
 ### Sources
+
+- [Haskell Documentation](http://www.haskell.org/hoogle/?hoogle=normal+%2Bopengl)
+- [OpenGL Haskelll Lighting](https://github.com/haskell-opengl/GLUT/blob/e566a4cbd9f0ab2a7a11966d9da3dadb8f90503c/examples/Misc/Gears.hs)
