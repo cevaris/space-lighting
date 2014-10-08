@@ -37,7 +37,6 @@ ambience   =  30    -- Ambient intensity (%)
 diffusion   = 100    -- Diffuse intensity (%)
 specularizion  =   0    -- Specular intensity (%)
 shininess =   0    -- Shininess (power of two)
---zh        =  90    -- Light azimuth
 ylight    =   0    -- Elevation of light
 --shinyvec[1]        -- Shininess (value)  
 
@@ -139,14 +138,7 @@ idle state = do
   t <- get elapsedTime
 
   let seconds = ((fromIntegral t))/1000.0
-
-  --double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
-  --zh = fmod(90*t,360.0);
-
-
   zh' state $~! (\x -> mod' (90*seconds) 360)
-  --zh  <- get (zh' state)
-  --putStrLn $ show zh
 
   if fov' < 55
     then fov state $~! (\x -> 55)
@@ -262,13 +254,10 @@ draw state = do
   drawStar 0.5 position
 
   
+  drawCube 1.5 ((-1),0,0)
+  drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
-
-
-
-
-
-
+  drawSphere 0.5 0.5 (0,0,0)
 
 
   lighting $= Disabled
@@ -276,10 +265,7 @@ draw state = do
   
   --drawGrid 5
 
-  --drawCube 1.5 ((-1),0,0)
-  --drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
-  --drawSphere 0.5 0.5 (0,0,0)
   
   --drawStar 0.5 (0, 1.5, 0)
 
@@ -302,15 +288,15 @@ draw state = do
   swapBuffers
   updateInfo state
   reportErrors
-  
+
 
 myInit :: [String] -> State -> IO ()
 myInit args state = do
   clearColor $= Color4 0 0 0 0
   depthFunc $= Just Less
-  --materialDiffuse Front $= Color4 0.7 0.7 0.7 1
-  --materialSpecular Front $= Color4 1 1 1 1
-  --materialShininess Front $= 100
+  materialDiffuse Front $= Color4 0.7 0.7 0.7 1
+  materialSpecular Front $= Color4 1 1 1 1
+  materialShininess Front $= 100
   
   --normalize $= Enabled
   --lighting $= Enabled

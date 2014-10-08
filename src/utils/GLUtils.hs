@@ -6,6 +6,15 @@ import Graphics.Rendering.OpenGL.Raw.ARB.WindowPos
 import Graphics.UI.GLUT
 
 type Point3 = (Float, Float, Float)
+type Point4 = (Float, Float, Float, Float)
+
+type Shininess = Int
+type Ambience4 = Point4
+type Diffuse4  = Point4
+type Specular4 = Point4
+
+type LightAttributes = (Ambience4, Diffuse4, Specular4, Shininess)
+
 
 --toGfloat :: Float -> GLfloat
 --toGfloat f = (realToFrac f)::GLfloat
