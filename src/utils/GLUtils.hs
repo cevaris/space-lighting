@@ -8,12 +8,17 @@ import Graphics.UI.GLUT
 type Point3 = (Float, Float, Float)
 type Point4 = (Float, Float, Float, Float)
 
-type Shininess = Int
-type Ambience4 = Point4
-type Diffuse4  = Point4
-type Specular4 = Point4
+type Scale      = Maybe Float
+type Shininess  = Maybe Int
+type Paint      = Maybe Point3
+type Location   = Maybe Point3
+type NoseVector = Maybe Point3
+type UpVector   = Maybe Point3
+type Ambience4  = Maybe Point4
+type Diffuse4   = Maybe Point4
+type Specular4  = Maybe Point4
 
-type LightAttributes = (Ambience4, Diffuse4, Specular4, Shininess)
+type ObjectAttributes = (Scale, Paint, Location, NoseVector, UpVector, Ambience4, Diffuse4, Specular4, Shininess)
 
 
 --toGfloat :: Float -> GLfloat

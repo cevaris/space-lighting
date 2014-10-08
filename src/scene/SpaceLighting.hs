@@ -251,7 +251,20 @@ draw state = do
   colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
   light (Light 0) $= Enabled
 
-  drawStar 0.5 position
+  --drawStar 0.5 position
+
+  drawStar (
+      (Just 0.5),
+      Nothing,
+      (Just (255, 255, 0)),
+      (Just position),
+      Nothing,
+      Nothing,
+      Nothing,
+      Nothing,
+      Nothing
+    )
+
 
   
   drawCube 1.5 ((-1),0,0)

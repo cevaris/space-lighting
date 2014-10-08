@@ -10,17 +10,18 @@ import Sphere
 -- Draw solid pyramid
 --  scale (s)
 --  at (x,y,z)
-drawStar :: Float-> (Float, Float, Float) -> IO ()
-drawStar s (x, y, z) = do
-  let radius = 1.0
-      slices = 100
-      stacks = 100
-
+--drawStar :: Float-> (Float, Float, Float) -> IO ()
+--drawStar s (x, y, z) = do
+drawStar :: ObjectAttributes -> IO ()
+drawStar (scaleSize, shininess, paint, location, noseVector, upVector, ambience4, diffuse4, specular4) = do
+  
   preservingMatrix $ do
-    preservingAttrib [AllServerAttributes] $ do    
-      color3f 255 255 0
+    preservingAttrib [AllServerAttributes] $ do  
+
+      case (paint, location, scaleSize ) of
+        ((Just (px, py, pz)), (Just (lx, ly, lz)), (Just s))-> do 
+          color3f px py pz
+          translate $ vector3f lx ly lz
+          scale3f s s s
           
-      translate $ vector3f x y z
-      scale3f s s s
-    
-      drawSphere s 0.5 (0,0,0)
+          drawSphere s 0.5 (0,0,0)
