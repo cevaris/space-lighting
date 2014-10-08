@@ -20,7 +20,7 @@ drawPyramid s (x, y, z) (dx, dy, dz) (ux, uy, uz) = do
       y0 = dy/d0
       z0 = dz/d0
       --  Unit vector in "up" direction
-      d1 = sqrt(ux*ux+uy*uy+uz*uz);
+      d1 = sqrt(ux*ux+uy*uy+uz*uz)
       x1 = ux/d1
       y1 = uy/d1
       z1 = uz/d1

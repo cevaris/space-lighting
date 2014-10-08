@@ -24,7 +24,7 @@ data ProjectionView = PerspectiveView | OrthogonalView | FirstPersonView derivin
 data Direction = UpDirection | DownDirection | LeftDirection | RightDirection deriving (Show, Eq)
 
 fraction  = 0.1
-
+  
 data State = State {
    frames  :: IORef Int,
    t0      :: IORef Int,
@@ -144,6 +144,11 @@ visible _     NotVisible = idleCallback $= Nothing
   
 reshape :: State -> ReshapeCallback
 reshape state s@(Size width height) = do
+
+
+  if height > 0
+    then asp state $~! (\x -> (fromIntegral width)/(fromIntegral height))
+    else asp state $~! (\x -> 1)
 
   viewport   $= (Position 0 0, s)
 
