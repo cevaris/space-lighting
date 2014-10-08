@@ -18,8 +18,8 @@ drawStar s (x, y, z) = do
 
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do    
-      color3f 1 1 0
-    
+      color3f 255 255 0
+          
       translate $ vector3f x y z
       scale3f s s s
     

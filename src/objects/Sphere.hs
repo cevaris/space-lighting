@@ -29,19 +29,14 @@ drawLatBand d (ph, th) =  do
 drawSphere :: Float-> Float-> (Float, Float, Float) -> IO ()
 drawSphere s q (x, y, z) = do
 
-  let yellow   = [1.0,1.0,0.0,1.0]
-      emission = [0.0,0.0,0.01,1.0]
-
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do
 
       translate $ vector3f x y z
       scale3f s s s
-      color3f 1 (69/255) 0
 
       mapM_ (\ph -> do
-        renderPrimitive QuadStrip $do
-          mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)
+          renderPrimitive QuadStrip $ mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)
         ) (spherePh q)
 
         

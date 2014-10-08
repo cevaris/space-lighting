@@ -1,6 +1,7 @@
 import Control.Monad ( when )
 import Data.IORef ( IORef, newIORef )
 import System.Exit ( exitWith, ExitCode(ExitSuccess), exitFailure )
+import Data.Fixed
 
 import Graphics.UI.GLUT
 
@@ -24,13 +25,30 @@ data ProjectionView = PerspectiveView | OrthogonalView | FirstPersonView derivin
 data Direction = UpDirection | DownDirection | LeftDirection | RightDirection deriving (Show, Eq)
 
 fraction  = 0.1
-  
+
+--lightEnabled =   True --  Lighting
+one       =   1    -- Unit value
+distance  =   5    -- Light distance
+inc       =  10    -- Ball increment
+smooth    =   1    -- Smooth/Flat shading
+local     =   0    -- Local Viewer Model
+emission  =   0    -- Emission intensity (%)
+ambience   =  30    -- Ambient intensity (%)
+diffusion   = 100    -- Diffuse intensity (%)
+specularizion  =   0    -- Specular intensity (%)
+shininess =   0    -- Shininess (power of two)
+--zh        =  90    -- Light azimuth
+ylight    =   0    -- Elevation of light
+--shinyvec[1]        -- Shininess (value)  
+
+
 data State = State {
    frames  :: IORef Int,
    t0      :: IORef Int,
    ph'     :: IORef Float,
    th'     :: IORef Float,
    gr'     :: IORef Float,
+   zh'     :: IORef Float,
    asp     :: IORef Float,
    fov     :: IORef Float,
    dim     :: IORef Float,
@@ -44,12 +62,13 @@ makeState = do
   ph <- newIORef 0
   th <- newIORef 0
   gr <- newIORef 0
-  fv <- newIORef 55
+  zh <- newIORef 90
+  fv <- newIORef 65
   as <- newIORef 1
   di <- newIORef 2
   i  <- newIORef ("","")
   return $ State {  
-    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, asp = as, fov = fv, dim = di, info = i
+    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, info = i
   }
 
 ----------------------------------------------------------------------------------------------------------------
@@ -114,8 +133,20 @@ idle state = do
   ph  <- get (ph' state)
   th  <- get (th' state)
   gr  <- get (gr' state)
+  zh  <- get (zh' state)
   dim' <- get (dim state)
   fov' <- get (fov state)
+  t <- get elapsedTime
+
+  let seconds = ((fromIntegral t))/1000.0
+
+  --double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
+  --zh = fmod(90*t,360.0);
+
+
+  zh' state $~! (\x -> mod' (90*seconds) 360)
+  --zh  <- get (zh' state)
+  --putStrLn $ show zh
 
   if fov' < 55
     then fov state $~! (\x -> 55)
@@ -136,6 +167,8 @@ idle state = do
   if ((-360) > th || th > 360)
     then th' state $~! (\x -> 0)
     else postRedisplay Nothing
+
+  postRedisplay Nothing
 
 
 visible :: State -> Visibility -> IO ()
@@ -158,7 +191,7 @@ reshape state s@(Size width height) = do
   fov <- get (fov state)
   asp <- get (asp state)
   dim <- get (dim state)
-  setPerspective fov asp (dim/4) (dim*4)
+  setPerspective fov asp (dim/16) (dim*16)
 
   matrixMode $= Modelview 0
   loadIdentity
@@ -196,6 +229,7 @@ draw state = do
   ph <- get (ph' state)
   th <- get (th' state)
   gr <- get (gr' state)
+  zh  <- get (zh' state)
   dim <- get (dim state)
   info <- get (info state)
 
@@ -206,13 +240,46 @@ draw state = do
       ey =    2*dim               *sin(toDeg(ph))
       ez =    2*dim*cos(toDeg(th))*cos(toDeg(ph))
   setLookAt (ex,ey,ez) (0,0,0) (0,cos(toDeg(ph)),0)
+
+
+  ------------------------------------
+  shadeModel $= Smooth
+
+  let ambs  = (0.01*ambience ,    0.01*ambience ,    0.01*ambience ,    1.0)
+      diffs = (0.01*diffusion ,   0.01*diffusion ,   0.01*diffusion ,   1.0)
+      specs = (0.01*specularizion,0.01*specularizion,0.01*specularizion,1.0)
+      position = (distance*glCos(zh),ylight,distance*glSin(zh))
+      yellow   = [1.0,1.0,0.0,1.0]
+      emiss = [0.0,0.0,0.01*emission,1.0]
+
+
+  normalize $= Enabled
+  lighting $= Enabled
+  lightModelLocalViewer $= Enabled
+  colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
+  light (Light 0) $= Enabled
+
+  drawStar 0.5 position
+
   
-  drawGrid 5
 
-  drawCube 1.5 ((-1),0,0)
-  drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
-  drawSphere 0.5 0.5 (0,0,0)
+
+
+
+
+
+
+
+  lighting $= Disabled
+  ------------------------------------
+  
+  --drawGrid 5
+
+  --drawCube 1.5 ((-1),0,0)
+  --drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
+
+  --drawSphere 0.5 0.5 (0,0,0)
   
   --drawStar 0.5 (0, 1.5, 0)
 
@@ -239,7 +306,21 @@ draw state = do
 
 myInit :: [String] -> State -> IO ()
 myInit args state = do
+  clearColor $= Color4 0 0 0 0
   depthFunc $= Just Less
+  --materialDiffuse Front $= Color4 0.7 0.7 0.7 1
+  --materialSpecular Front $= Color4 1 1 1 1
+  --materialShininess Front $= 100
+  
+  --normalize $= Enabled
+  --lighting $= Enabled
+  --lightModelLocalViewer $= Enabled
+  --colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
+  --light (Light 0) $= Enabled
+  
+  --autoNormal $= Enabled
+  
+  
 
 main :: IO ()
 main = do
