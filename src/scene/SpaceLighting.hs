@@ -36,7 +36,7 @@ emission  =   0    -- Emission intensity (%)
 ambience   =  30    -- Ambient intensity (%)
 diffusion   = 100    -- Diffuse intensity (%)
 specularizion  =   0    -- Specular intensity (%)
-shininess =   0    -- Shininess (power of two)
+shininess' =   0    -- Shininess (power of two)
 ylight    =   0    -- Elevation of light
 --shinyvec[1]        -- Shininess (value)  
 
@@ -251,21 +251,17 @@ draw state = do
   colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
   light (Light 0) $= Enabled
 
-  --drawStar 0.5 position
-
-  drawStar (
-      (Just 0.5),
-      Nothing,
-      (Just (255, 255, 0)),
-      (Just position),
-      Nothing,
-      Nothing,
-      Nothing,
-      Nothing,
-      Nothing
-    )
-
-
+  drawStar $ ObjectAttributes {  
+    scaleSize  = (Just 0.5),
+    paint      = (Just (255, 255, 0)),
+    location   = (Just position),
+    noseVector = Nothing,
+    upVector   = Nothing,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Nothing,
+    shininess  = Nothing
+  }
   
   drawCube 1.5 ((-1),0,0)
   drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)

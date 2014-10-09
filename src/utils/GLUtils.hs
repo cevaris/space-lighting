@@ -18,7 +18,18 @@ type Ambience4  = Maybe Point4
 type Diffuse4   = Maybe Point4
 type Specular4  = Maybe Point4
 
-type ObjectAttributes = (Scale, Paint, Location, NoseVector, UpVector, Ambience4, Diffuse4, Specular4, Shininess)
+--type ObjectAttributes = (Scale, Paint, Location, NoseVector, UpVector, Ambience4, Diffuse4, Specular4, Shininess)
+data ObjectAttributes = ObjectAttributes {
+  scaleSize :: Scale,
+  paint      :: Paint,
+  location   :: Location,
+  noseVector :: NoseVector,
+  upVector   :: UpVector,
+  ambience4  :: Ambience4,
+  diffuse4   :: Diffuse4,
+  specular4  :: Specular4,
+  shininess  :: Shininess
+}
 
 
 --toGfloat :: Float -> GLfloat
