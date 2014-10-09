@@ -13,7 +13,7 @@ import Sphere
 --drawStar :: Float-> (Float, Float, Float) -> IO ()
 --drawStar s (x, y, z) = do
 drawStar :: ObjectAttributes -> IO ()
-drawStar (ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 shininess) = do
+drawStar object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 shininess) = do
   
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do  
@@ -25,3 +25,4 @@ drawStar (ObjectAttributes scaleSize paint location noseVector upVector ambience
           scale3f s s s
           
           drawSphere s 0.5 (0,0,0)
+        _ -> putStrLn $ "Start Light case Fail: " ++ (show object)

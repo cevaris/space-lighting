@@ -29,7 +29,7 @@ data ObjectAttributes = ObjectAttributes {
   diffuse4   :: Diffuse4,
   specular4  :: Specular4,
   shininess  :: Shininess
-}
+} deriving (Show, Eq)
 
 
 --toGfloat :: Float -> GLfloat
