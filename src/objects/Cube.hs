@@ -10,9 +10,7 @@ import GLUtils
 drawCube :: State -> ObjectAttributes -> IO ()
 drawCube state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
 
-  let w     = 1.0
-  
-  cubeDisplayList <- (cube w)
+  let w = 1.0
 
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do
@@ -40,15 +38,6 @@ drawCube state object@(ObjectAttributes scaleSize paint location noseVector upVe
           
           renderPrimitive Quads $ do
             cube w
-
-
-  --cubeDisplayList <- (cube 0.25)
-  --preservingMatrix $ do
-  --  preservingAttrib [AllServerAttributes] $ do
-  --    translate $ vector3f x y z
-  --    scale3f s s s
-  --    callList cubeDisplayList
-      postRedisplay Nothing
 
 
 cube :: Float -> IO ()
@@ -90,82 +79,3 @@ cube w = do
   drawVertex3f w (-w) (-w)
   drawVertex3f w (-w) w
   drawVertex3f (-w) (-w) w
-
-  --cubeDisplayList <- defineNewList Compile $ do
-    --renderPrimitive Quads $ do
-
-      --color3f (105/255) (105/255) (105/255)
-  --drawNormal3f 
-  --vertex $ Vertex3 w w w
-  --vertex $ Vertex3 w w (-w)
-  --vertex $ Vertex3 w (-w) (-w)
-  --vertex $ Vertex3 w (-w) w
-
-  --vertex $ Vertex3 w w w
-  --vertex $ Vertex3 w w (-w)
-  --vertex $ Vertex3 (-w) w (-w)
-  --vertex $ Vertex3 (-w) w w
-  
-  --vertex $ Vertex3 w w w
-  --vertex $ Vertex3 w (-w) w
-  --vertex $ Vertex3 (-w) (-w) w
-  --vertex $ Vertex3 (-w) w w
-  
-  --vertex $ Vertex3 (-w) w w
-  --vertex $ Vertex3 (-w) w (-w)
-  --vertex $ Vertex3 (-w) (-w) (-w)
-  --vertex $ Vertex3 (-w) (-w) w
-  
-  --vertex $ Vertex3 w (-w) w
-  --vertex $ Vertex3 w (-w) (-w)
-  --vertex $ Vertex3 (-w) (-w) (-w)
-  --vertex $ Vertex3 (-w) (-w) w
-  
-  --vertex $ Vertex3 w w (-w)
-  --vertex $ Vertex3 w (-w) (-w)
-  --vertex $ Vertex3 (-w) (-w) (-w)
-  --vertex $ Vertex3 (-w) w (-w)
-
-  --return cubeDisplayList
-
-
-
-
---cube :: GLfloat -> IO DisplayList
---cube w = do
-
---  cubeDisplayList <- defineNewList Compile $ do
---    renderPrimitive Quads $ do
-
---      color3f (105/255) (105/255) (105/255)
---      vertex $ Vertex3 w w w
---      vertex $ Vertex3 w w (-w)
---      vertex $ Vertex3 w (-w) (-w)
---      vertex $ Vertex3 w (-w) w
-
---      vertex $ Vertex3 w w w
---      vertex $ Vertex3 w w (-w)
---      vertex $ Vertex3 (-w) w (-w)
---      vertex $ Vertex3 (-w) w w
-      
---      vertex $ Vertex3 w w w
---      vertex $ Vertex3 w (-w) w
---      vertex $ Vertex3 (-w) (-w) w
---      vertex $ Vertex3 (-w) w w
-      
---      vertex $ Vertex3 (-w) w w
---      vertex $ Vertex3 (-w) w (-w)
---      vertex $ Vertex3 (-w) (-w) (-w)
---      vertex $ Vertex3 (-w) (-w) w
-      
---      vertex $ Vertex3 w (-w) w
---      vertex $ Vertex3 w (-w) (-w)
---      vertex $ Vertex3 (-w) (-w) (-w)
---      vertex $ Vertex3 (-w) (-w) w
-      
---      vertex $ Vertex3 w w (-w)
---      vertex $ Vertex3 w (-w) (-w)
---      vertex $ Vertex3 (-w) (-w) (-w)
---      vertex $ Vertex3 (-w) w (-w)
-
---  return cubeDisplayList

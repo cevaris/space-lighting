@@ -36,7 +36,7 @@ ambience   =  30    -- Ambient intensity (%)
 diffusion   = 100    -- Diffuse intensity (%)
 specularizion  =   0    -- Specular intensity (%)
 shininess' =   0    -- Shininess (power of two)
-ylight    =   0    -- Elevation of light
+--ylight    =   0    -- Elevation of light
 --shinyvec[1]        -- Shininess (value)  
 
 
@@ -63,9 +63,17 @@ keyboard state (Char 'D')           _ _ _ = modDim state Increase
 keyboard state (Char 'f')           _ _ _ = modFov state Decrease
 keyboard state (Char 'F')           _ _ _ = modFov state Increase
 
+keyboard state (Char '[')           _ _ _ = modLightHeight state Decrease
+keyboard state (Char ']')           _ _ _ = modLightHeight state Increase
+
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
 
+modLightHeight :: State -> ChangeDirection -> IO ()
+modLightHeight state Decrease = do
+  ylight' state $~! (\x -> x - 5)
+modLightHeight state Increase  = do
+  ylight' state $~! (+5)
 
 modRotate :: State -> SpecialKey -> IO ()
 modRotate state KeyDown = do
@@ -105,6 +113,7 @@ idle state = do
   zh  <- get (zh' state)
   dim' <- get (dim state)
   fov' <- get (fov state)
+
   t <- get elapsedTime
 
   let seconds = ((fromIntegral t))/1000.0
@@ -193,6 +202,7 @@ draw state = do
   zh  <- get (zh' state)
   dim <- get (dim state)
   info <- get (info state)
+  ylight <- get (ylight' state)
 
   loadIdentity
 

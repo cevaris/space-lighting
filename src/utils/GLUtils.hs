@@ -17,6 +17,7 @@ data State = State {
    asp     :: IORef Float,
    fov     :: IORef Float,
    dim     :: IORef Float,
+   ylight' :: IORef Float, 
    info    :: IORef (String,String)
 }
 
@@ -31,9 +32,10 @@ makeState = do
   fv <- newIORef 65
   as <- newIORef 1
   di <- newIORef 2
+  yl <- newIORef 0
   i  <- newIORef ("","")
   return $ State {  
-    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, info = i
+    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, ylight' = yl, info = i
   }
 
 type Point3 = (Float, Float, Float)
