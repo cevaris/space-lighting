@@ -326,9 +326,6 @@ myInit :: [String] -> State -> IO ()
 myInit args state = do
   clearColor $= Color4 0 0 0 0
   depthFunc $= Just Less
-  materialDiffuse Front $= Color4 0.7 0.7 0.7 1
-  materialSpecular Front $= Color4 1 1 1 1
-  materialShininess Front $= 100
   
   --normalize $= Enabled
   --lighting $= Enabled
