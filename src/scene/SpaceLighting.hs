@@ -251,7 +251,19 @@ draw state = do
   colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
   light (Light 0) $= Enabled
 
-  drawStar $ ObjectAttributes {  
+  --drawStar $ ObjectAttributes {  
+  --  scaleSize  = (Just 0.5),
+  --  paint      = (Just (255, 255, 0)),
+  --  location   = (Just position),
+  --  noseVector = Nothing,
+  --  upVector   = Nothing,
+  --  ambience4  = Nothing,
+  --  diffuse4   = Nothing,
+  --  specular4  = Nothing,
+  --  shininess  = Nothing
+  --}
+
+  drawSphere $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = (Just (255, 255, 0)),
     location   = (Just position),
@@ -266,7 +278,18 @@ draw state = do
   drawCube 1.5 ((-1),0,0)
   drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
-  drawSphere 0.5 0.5 (0,0,0)
+  --drawSphere 0.5 0.5 (0,0,0)
+  drawSphere $ ObjectAttributes {  
+    scaleSize  = (Just 0.5),
+    paint      = (Just (1, 1, 1)),
+    location   = (Just (0, 0, 0)),
+    noseVector = Nothing,
+    upVector   = Nothing,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Nothing,
+    shininess  = Nothing
+  }
 
 
   lighting $= Disabled

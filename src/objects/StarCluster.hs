@@ -23,7 +23,8 @@ drawStarCluster (xT, yT, zT) = do
         color3f 0 1 0
         translate $ vector3f (xT*x) (yT*y) (zT*z)
         scale3f (0.015*abs(x)) (0.015*abs(x)) (0.015*abs(x))
-        drawSphere 1 4 (0,0,0)
+        --drawSphere 1 4 (0,0,0)
+        postRedisplay Nothing
       ) (clusterPoints 100 (mkStdGen 1) (mkStdGen 10) (mkStdGen 30))
             
       

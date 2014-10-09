@@ -24,5 +24,6 @@ drawStar object@(ObjectAttributes scaleSize paint location noseVector upVector a
           translate $ vector3f lx ly lz
           scale3f s s s
           
-          drawSphere s 0.5 (0,0,0)
+          --drawSphere s 0.5 (0,0,0)
+          drawSphere object
         _ -> putStrLn $ "Start Light case Fail: " ++ (show object)
