@@ -118,6 +118,17 @@ setOrtho left right bottom top nearVal farVal = ortho ((realToFrac left)::GLdoub
 setLookAt :: Point3 -> Point3 -> Point3 -> IO ()
 setLookAt (ex,ey,ez) (cx,cy,cz) (ux,uy,uz) = lookAt (vertex3d ex ey ez) (vertex3d cx cy cz) (vector3d ux uy uz)
 
+ambient4f :: Point4 -> IO ()
+ambient4f (Point4 x y z a) = ambient (Light 0) $= Color4 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat)
+
+specular4f :: Point4 -> IO ()
+specular4f (Point4 x y z a) = specular (Light 0) $= Color4 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat)
+
+diffuse4f :: Point4 -> IO ()
+diffuse4f (Point4 x y z a) = diffuse (Light 0) $= Color4 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat)
+
+position4f :: Point4 -> IO ()
+position4f (Point4 x y z a) = position (Light 0) $= Vertex4 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat)
 
 glWindowPos :: GLfloat -> GLfloat -> IO ()
 glWindowPos x y = glWindowPos2f x y

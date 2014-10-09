@@ -207,12 +207,13 @@ draw state = do
   ------------------------------------
   shadeModel $= Smooth
 
-  let ambs  = (0.01*ambience ,    0.01*ambience ,    0.01*ambience ,    1.0)
-      diffs = (0.01*diffusion ,   0.01*diffusion ,   0.01*diffusion ,   1.0)
-      specs = (0.01*specularizion,0.01*specularizion,0.01*specularizion,1.0)
-      position = (distance*glCos(zh),ylight,distance*glSin(zh))
-      yellow   = [1.0,1.0,0.0,1.0]
-      emiss = [0.0,0.0,0.01*emission,1.0]
+  let ambs     = (Point4 (0.01*ambience) (0.01*ambience) (0.01*ambience) 1.0)
+      diffs    = (Point4 (0.01*diffusion) (0.01*diffusion) (0.01*diffusion) 1.0)
+      specs    = (Point4 (0.01*specularizion) (0.01*specularizion) (0.01*specularizion) 1.0)
+      loc3     = (distance*glCos(zh), ylight, distance*glSin(zh))
+      loc4     = (Point4 (distance*glCos(zh)) ylight (distance*glSin(zh)) 1.0)
+      yellow   = (Point4 1.0 1.0 0.0 1.0)
+      emiss    = (Point4 0.0 0.0 (0.01*emission) 1.0)
 
 
   normalize $= Enabled
@@ -221,10 +222,12 @@ draw state = do
   colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
   light (Light 0) $= Enabled
 
+
+
   --drawStar $ ObjectAttributes {  
   --  scaleSize  = (Just 0.5),
   --  paint      = (Just (255, 255, 0)),
-  --  location   = (Just position),
+  --  location   = (Just location),
   --  noseVector = Nothing,
   --  upVector   = Nothing,
   --  ambience4  = Nothing,
@@ -236,7 +239,7 @@ draw state = do
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = Just $ (Point4 255 255 0 0),
-    location   = (Just position),
+    location   = (Just loc3),
     noseVector = Nothing,
     upVector   = Nothing,
     ambience4  = Nothing,
@@ -245,18 +248,6 @@ draw state = do
     shininess  = Nothing
   }
 
-  drawSphere state $ ObjectAttributes {  
-    scaleSize  = (Just 0.5),
-    paint      = Just $ (Point4 1 1 1 0),
-    location   = (Just (0, 0, 0)),
-    noseVector = Nothing,
-    upVector   = Nothing,
-    ambience4  = Nothing,
-    diffuse4   = Nothing,
-    specular4  = Nothing,
-    shininess  = Nothing
-  }
-  
   drawCube 1.5 ((-1),0,0)
   drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
@@ -273,6 +264,10 @@ draw state = do
     shininess  = Nothing
   }
 
+  ambient4f ambs
+  specular4f specs
+  diffuse4f diffs
+  position4f loc4
 
   lighting $= Disabled
   ------------------------------------

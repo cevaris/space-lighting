@@ -23,9 +23,6 @@ drawLatBand d (ph, th) =  do
   
 
 --Draw solid sphere
---  scale (s)
---  quality (q)
---  at (x,y,z)
 --drawSphere :: Float-> Float-> (Float, Float, Float) -> IO ()
 --drawSphere s q (x, y, z) = do
 drawSphere :: State -> ObjectAttributes -> IO ()
