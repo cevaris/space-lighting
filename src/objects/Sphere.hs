@@ -38,9 +38,21 @@ drawSphere state object@(ObjectAttributes scaleSize paint location noseVector up
           translate $ vector3f lx ly lz
           scale3f s s s
 
-          --materialDiffuse Front $= Color4 0.7 0.7 0.7 1
-          --materialSpecular Front $= Color4 1 1 1 1
-          --materialShininess Front $= 100
+          case specular4 of 
+            (Just point4) -> do 
+              materialSpecular Front $= pointToColor4f point4
+            _ -> postRedisplay Nothing
+
+          case emission4 of 
+            (Just point4) -> do 
+              materialEmission Front $= pointToColor4f point4
+            _ -> postRedisplay Nothing
+
+          case shininess of 
+            (Just sh) -> do 
+              materialShininess Front $= (iToGL sh)
+            _ -> postRedisplay Nothing
+          
 
           mapM_ (\ph -> do
               renderPrimitive QuadStrip $ mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)

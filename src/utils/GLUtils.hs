@@ -69,6 +69,9 @@ data ObjectAttributes = ObjectAttributes {
 --toGfloat :: Float -> GLfloat
 --toGfloat f = (realToFrac f)::GLfloat
 
+iToGL :: Int -> GLfloat
+iToGL i = (fromIntegral i)::GLfloat
+
 fToGL :: Float -> GLfloat
 fToGL f = (realToFrac f)::GLfloat
 
@@ -131,6 +134,9 @@ diffuse4f (Point4 x y z a) = diffuse (Light 0) $= Color4 ((realToFrac x)::GLfloa
 
 position4f :: Point4 -> IO ()
 position4f (Point4 x y z a) = position (Light 0) $= Vertex4 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat)
+
+pointToColor4f :: Point4 -> Color4 GLfloat
+pointToColor4f (Point4 x y z a) = Color4 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat)
 
 glWindowPos :: GLfloat -> GLfloat -> IO ()
 glWindowPos x y = glWindowPos2f x y
