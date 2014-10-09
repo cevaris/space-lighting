@@ -24,7 +24,7 @@ drawStation a s (x, y, z) (ux, uy, uz) = do
         scale3f s s s
         rotate a (Vector3 0 1 0)
 
-        drawCube cs (0,0,0)
+        --drawCube cs (0,0,0)
         -- Up
         drawPyramid s (0,(-0.75),0) (1,0,0) (0,1,0)
         -- Down

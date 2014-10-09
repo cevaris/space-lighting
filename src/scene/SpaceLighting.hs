@@ -212,6 +212,8 @@ draw state = do
       loc3     = (distance*glCos(zh), ylight, distance*glSin(zh))
       loc4     = (Point4 (distance*glCos(zh)) ylight (distance*glSin(zh)) 1.0)
       yellow   = (Point4 1.0 1.0 0.0 1.0)
+      white    = (Point4 1 1 1 1)
+      black    = (Point4 0 0 0 1)
       emiss    = (Point4 0.0 0.0 (0.01*emission) 1.0)
 
 
@@ -234,7 +236,19 @@ draw state = do
     shininess  = Nothing
   }
 
-  drawCube 1.5 ((-1),0,0)
+  --drawCube 1.5 ((-1),0,0)
+  drawCube state $ ObjectAttributes {  
+    scaleSize  = (Just 0.5),
+    paint      = Just $ (Point4 1 1 1 0),
+    location   = (Just ((-1.5), 0, 0)),
+    noseVector = Nothing,
+    upVector   = Nothing,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Just white,
+    emission4  = Just black,
+    shininess  = Just shininess'
+  }
   drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
   drawSphere state $ ObjectAttributes {  
