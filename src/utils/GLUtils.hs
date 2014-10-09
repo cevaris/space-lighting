@@ -20,7 +20,7 @@ type Specular4  = Maybe Point4
 
 --type ObjectAttributes = (Scale, Paint, Location, NoseVector, UpVector, Ambience4, Diffuse4, Specular4, Shininess)
 data ObjectAttributes = ObjectAttributes {
-  scaleSize :: Scale,
+  scaleSize  :: Scale,
   paint      :: Paint,
   location   :: Location,
   noseVector :: NoseVector,
@@ -73,6 +73,9 @@ scale3f x y z = scale ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((real
 
 color3f :: Float -> Float -> Float -> IO ()
 color3f x y z = color (Color3 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat))
+
+color4f :: Point4 -> IO ()
+color4f (x, y, z, a) = color (Color4  ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat))
 
 setPerspective :: Float -> Float -> Float -> Float -> IO ()
 setPerspective fov aspect zNear zFar = perspective ((realToFrac fov)::GLdouble) ((realToFrac aspect)::GLdouble) ((realToFrac zNear)::GLdouble) ((realToFrac zFar)::GLdouble)

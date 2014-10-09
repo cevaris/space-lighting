@@ -41,9 +41,9 @@ drawSphere object@(ObjectAttributes scaleSize paint location noseVector upVector
           translate $ vector3f lx ly lz
           scale3f s s s
 
-          materialDiffuse Front $= Color4 0.7 0.7 0.7 1
-          materialSpecular Front $= Color4 1 1 1 1
-          materialShininess Front $= 100
+          --materialDiffuse Front $= Color4 0.7 0.7 0.7 1
+          --materialSpecular Front $= Color4 1 1 1 1
+          --materialShininess Front $= 100
 
           mapM_ (\ph -> do
               renderPrimitive QuadStrip $ mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)
