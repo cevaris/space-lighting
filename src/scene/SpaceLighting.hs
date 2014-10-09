@@ -230,6 +230,7 @@ draw state = do
     ambience4  = Nothing,
     diffuse4   = Nothing,
     specular4  = Nothing,
+    emission4  = Nothing,
     shininess  = Nothing
   }
 
@@ -245,6 +246,7 @@ draw state = do
     ambience4  = Nothing,
     diffuse4   = Nothing,
     specular4  = Nothing,
+    emission4  = Just $ (Point4 0 0 (0.01*emission) 1),
     shininess  = Nothing
   }
 

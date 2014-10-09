@@ -48,6 +48,7 @@ type UpVector   = Maybe Point3
 type Ambience4  = Maybe Point4
 type Diffuse4   = Maybe Point4
 type Specular4  = Maybe Point4
+type Emission4  = Maybe Point4
 type Shininess  = Maybe Int
 
 --type ObjectAttributes = (Scale, Paint, Location, NoseVector, UpVector, Ambience4, Diffuse4, Specular4, Shininess)
@@ -60,6 +61,7 @@ data ObjectAttributes = ObjectAttributes {
   ambience4  :: Ambience4,
   diffuse4   :: Diffuse4,
   specular4  :: Specular4,
+  emission4  :: Emission4,
   shininess  :: Shininess
 } deriving (Show, Eq)
 
