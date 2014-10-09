@@ -1,5 +1,4 @@
 import Control.Monad ( when )
-import Data.IORef ( IORef, newIORef )
 import System.Exit ( exitWith, ExitCode(ExitSuccess), exitFailure )
 import Data.Fixed
 
@@ -40,35 +39,6 @@ shininess' =   0    -- Shininess (power of two)
 ylight    =   0    -- Elevation of light
 --shinyvec[1]        -- Shininess (value)  
 
-
-data State = State {
-   frames  :: IORef Int,
-   t0      :: IORef Int,
-   ph'     :: IORef Float,
-   th'     :: IORef Float,
-   gr'     :: IORef Float,
-   zh'     :: IORef Float,
-   asp     :: IORef Float,
-   fov     :: IORef Float,
-   dim     :: IORef Float,
-   info    :: IORef (String,String)
- }
-
-makeState :: IO State
-makeState = do
-  f  <- newIORef 0
-  t  <- newIORef 0
-  ph <- newIORef 0
-  th <- newIORef 0
-  gr <- newIORef 0
-  zh <- newIORef 90
-  fv <- newIORef 65
-  as <- newIORef 1
-  di <- newIORef 2
-  i  <- newIORef ("","")
-  return $ State {  
-    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, info = i
-  }
 
 ----------------------------------------------------------------------------------------------------------------
 -- Timer 
@@ -263,7 +233,7 @@ draw state = do
   --  shininess  = Nothing
   --}
 
-  drawSphere $ ObjectAttributes {  
+  drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = Just $ (Point4 255 255 0 0),
     location   = (Just position),
@@ -275,7 +245,7 @@ draw state = do
     shininess  = Nothing
   }
 
-  drawSphere $ ObjectAttributes {  
+  drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = Just $ (Point4 1 1 1 0),
     location   = (Just (0, 0, 0)),
@@ -291,7 +261,7 @@ draw state = do
   drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
   --drawSphere 0.5 0.5 (0,0,0)
-  drawSphere $ ObjectAttributes {  
+  drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = Just $ (Point4 1 1 1 0),
     location   = (Just (0, 0, 0)),

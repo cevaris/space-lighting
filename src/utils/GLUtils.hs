@@ -1,9 +1,40 @@
 module GLUtils where
+import Data.IORef ( IORef, newIORef )
 
 import Numeric
 
 import Graphics.Rendering.OpenGL.Raw.ARB.WindowPos
 import Graphics.UI.GLUT
+
+
+data State = State {
+   frames  :: IORef Int,
+   t0      :: IORef Int,
+   ph'     :: IORef Float,
+   th'     :: IORef Float,
+   gr'     :: IORef Float,
+   zh'     :: IORef Float,
+   asp     :: IORef Float,
+   fov     :: IORef Float,
+   dim     :: IORef Float,
+   info    :: IORef (String,String)
+}
+
+makeState :: IO State
+makeState = do
+  f  <- newIORef 0
+  t  <- newIORef 0
+  ph <- newIORef 0
+  th <- newIORef 0
+  gr <- newIORef 0
+  zh <- newIORef 90
+  fv <- newIORef 65
+  as <- newIORef 1
+  di <- newIORef 2
+  i  <- newIORef ("","")
+  return $ State {  
+    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, info = i
+  }
 
 type Point3 = (Float, Float, Float)
 --type Point4 = (Float, Float, Float, Float)

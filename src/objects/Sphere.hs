@@ -28,8 +28,8 @@ drawLatBand d (ph, th) =  do
 --  at (x,y,z)
 --drawSphere :: Float-> Float-> (Float, Float, Float) -> IO ()
 --drawSphere s q (x, y, z) = do
-drawSphere :: ObjectAttributes -> IO ()
-drawSphere object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 shininess) = do
+drawSphere :: State -> ObjectAttributes -> IO ()
+drawSphere state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 shininess) = do
 
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do
