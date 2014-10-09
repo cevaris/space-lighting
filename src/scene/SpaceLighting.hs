@@ -265,8 +265,20 @@ draw state = do
 
   drawSphere $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
-    paint      = (Just (255, 255, 0)),
+    paint      = Just $ (Point4 255 255 0 0),
     location   = (Just position),
+    noseVector = Nothing,
+    upVector   = Nothing,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Nothing,
+    shininess  = Nothing
+  }
+
+  drawSphere $ ObjectAttributes {  
+    scaleSize  = (Just 0.5),
+    paint      = Just $ (Point4 1 1 1 0),
+    location   = (Just (0, 0, 0)),
     noseVector = Nothing,
     upVector   = Nothing,
     ambience4  = Nothing,
@@ -281,7 +293,7 @@ draw state = do
   --drawSphere 0.5 0.5 (0,0,0)
   drawSphere $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
-    paint      = (Just (1, 1, 1)),
+    paint      = Just $ (Point4 1 1 1 0),
     location   = (Just (0, 0, 0)),
     noseVector = Nothing,
     upVector   = Nothing,

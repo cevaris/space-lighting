@@ -6,17 +6,18 @@ import Graphics.Rendering.OpenGL.Raw.ARB.WindowPos
 import Graphics.UI.GLUT
 
 type Point3 = (Float, Float, Float)
-type Point4 = (Float, Float, Float, Float)
+--type Point4 = (Float, Float, Float, Float)
+data Point4 = Point4 Float Float Float Float deriving (Show, Eq)
 
 type Scale      = Maybe Float
-type Shininess  = Maybe Int
-type Paint      = Maybe Point3
+type Paint      = Maybe Point4
 type Location   = Maybe Point3
 type NoseVector = Maybe Point3
 type UpVector   = Maybe Point3
 type Ambience4  = Maybe Point4
 type Diffuse4   = Maybe Point4
 type Specular4  = Maybe Point4
+type Shininess  = Maybe Int
 
 --type ObjectAttributes = (Scale, Paint, Location, NoseVector, UpVector, Ambience4, Diffuse4, Specular4, Shininess)
 data ObjectAttributes = ObjectAttributes {
@@ -75,7 +76,7 @@ color3f :: Float -> Float -> Float -> IO ()
 color3f x y z = color (Color3 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat))
 
 color4f :: Point4 -> IO ()
-color4f (x, y, z, a) = color (Color4  ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat))
+color4f (Point4 x y z a) = color (Color4  ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat) ((realToFrac a)::GLfloat))
 
 setPerspective :: Float -> Float -> Float -> Float -> IO ()
 setPerspective fov aspect zNear zFar = perspective ((realToFrac fov)::GLdouble) ((realToFrac aspect)::GLdouble) ((realToFrac zNear)::GLdouble) ((realToFrac zFar)::GLdouble)

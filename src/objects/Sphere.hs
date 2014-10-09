@@ -36,7 +36,7 @@ drawSphere object@(ObjectAttributes scaleSize paint location noseVector upVector
       let q = 0.5
 
       case (paint, location, scaleSize) of
-        ((Just (px, py, pz)), (Just (lx, ly, lz)), (Just s))-> do 
+        ((Just (Point4 px py pz pa)), (Just (lx, ly, lz)), (Just s))-> do 
           color3f px py pz
           translate $ vector3f lx ly lz
           scale3f s s s

@@ -14,16 +14,16 @@ import Sphere
 --drawStar s (x, y, z) = do
 drawStar :: ObjectAttributes -> IO ()
 drawStar object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 shininess) = do
-  
-  preservingMatrix $ do
-    preservingAttrib [AllServerAttributes] $ do  
+  postRedisplay Nothing
+  --preservingMatrix $ do
+  --  preservingAttrib [AllServerAttributes] $ do  
 
-      case (paint, location, scaleSize) of
-        ((Just (px, py, pz)), (Just (lx, ly, lz)), (Just s))-> do 
-          color3f px py pz
-          translate $ vector3f lx ly lz
-          scale3f s s s
+  --    case (paint, location, scaleSize) of
+  --      ((Just (px, py, pz)), (Just (lx, ly, lz)), (Just s))-> do 
+  --        color3f px py pz
+  --        translate $ vector3f lx ly lz
+  --        scale3f s s s
           
-          --drawSphere s 0.5 (0,0,0)
-          drawSphere object
-        _ -> putStrLn $ "Start Light case Fail: " ++ (show object)
+  --        --drawSphere s 0.5 (0,0,0)
+  --        drawSphere object
+  --      _ -> putStrLn $ "Start Light case Fail: " ++ (show object)
