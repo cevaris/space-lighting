@@ -27,7 +27,7 @@ fraction  = 0.1
 
 --lightEnabled =   True --  Lighting
 one       =   1    -- Unit value
-distance  =   5    -- Light distance
+--distance  =   5    -- Light distance
 inc       =  10    -- Ball increment
 smooth    =   1    -- Smooth/Flat shading
 local     =   0    -- Local Viewer Model
@@ -66,8 +66,17 @@ keyboard state (Char 'F')           _ _ _ = modFov state Increase
 keyboard state (Char '[')           _ _ _ = modLightHeight state Decrease
 keyboard state (Char ']')           _ _ _ = modLightHeight state Increase
 
+keyboard state (Char 'R')           _ _ _ = modLightRadius state Decrease
+keyboard state (Char 'r')           _ _ _ = modLightRadius state Increase
+
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
+
+modLightRadius :: State -> ChangeDirection -> IO ()
+modLightRadius state Decrease = do
+  rlight' state $~! (\x -> x - 1)
+modLightRadius state Increase  = do
+  rlight' state $~! (+1)
 
 modLightHeight :: State -> ChangeDirection -> IO ()
 modLightHeight state Decrease = do
@@ -84,7 +93,6 @@ modRotate state KeyRight = do
   th' state $~! (\x -> x - 5)
 modRotate state KeyLeft = do
   th' state $~! (+5)
-
 
 modFov :: State -> ChangeDirection -> IO ()
 modFov state Decrease = do
@@ -203,6 +211,7 @@ draw state = do
   dim <- get (dim state)
   info <- get (info state)
   ylight <- get (ylight' state)
+  rlight <- get (rlight' state)
 
   loadIdentity
 
@@ -219,8 +228,8 @@ draw state = do
   let ambs     = (Point4 (0.01*ambience) (0.01*ambience) (0.01*ambience) 1.0)
       diffs    = (Point4 (0.01*diffusion) (0.01*diffusion) (0.01*diffusion) 1.0)
       specs    = (Point4 (0.01*specularizion) (0.01*specularizion) (0.01*specularizion) 1.0)
-      loc3     = (distance*glCos(zh), ylight, distance*glSin(zh))
-      loc4     = (Point4 (distance*glCos(zh)) ylight (distance*glSin(zh)) 1.0)
+      loc3     = (rlight*glCos(zh), ylight, rlight*glSin(zh))
+      loc4     = (Point4 (rlight*glCos(zh)) ylight (rlight*glSin(zh)) 1.0)
       yellow   = (Point4 1.0 1.0 0.0 1.0)
       white    = (Point4 1 1 1 1)
       black    = (Point4 0 0 0 1)

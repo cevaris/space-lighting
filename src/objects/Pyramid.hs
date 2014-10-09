@@ -42,33 +42,36 @@ drawPyramid s (x, y, z) (dx, dy, dz) (ux, uy, uz) = do
       multMatrix (mat :: GLmatrix GLfloat)
       
       renderPrimitive Triangles $ do
-
-        color3f (192/255) (192/255) (192/255)
         
         -- Front
+        drawNormal3f 0 0.5 0.5
         drawVertex3f  0 1 0
         drawVertex3f (-1) (-1) 1
         drawVertex3f 1 (-1) 1
    
         -- Right
+        drawNormal3f 0.5 0.5 0
         drawVertex3f 0 1 0
         drawVertex3f 1 (-1) 1
         drawVertex3f 1 (-1) (-1)
    
         -- Back
+        drawNormal3f 0 0.5 (-0.5)
         drawVertex3f 0 1 0
         drawVertex3f 1 (-1) (-1)
         drawVertex3f (-1) (-1) (-1)
    
         -- Left
+        drawNormal3f (-0.5) 0.5 0
         drawVertex3f  0 1 0
         drawVertex3f (-1)(-1)(-1)
         drawVertex3f (-1) (-1) 1
 
       renderPrimitive Quads $ do
 
-        color3f 0 0 1
+        --color3f 0 0 1
         
+        drawNormal3f 0 (-0.5) 0
         drawVertex3f 1 (-1) 1
         drawVertex3f 1 (-1) (-1)
         drawVertex3f (-1) (-1) (-1)
