@@ -268,7 +268,22 @@ draw state = do
     emission4  = Just black,
     shininess  = Just shininess'
   }
-  drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
+  
+  --drawStation 0.0 0.5 (1,0,0) (0,1,0)
+  --drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
+  --drawPyramid state $ ObjectAttributes {  
+  --  scaleSize  = Just $ 0.5,
+  --  paint      = Just $ (Point4 1 1 1 0),
+  --  location   = Just $ (1.5,0,0),
+  --  noseVector = Just $ (1,0,0),
+  --  upVector   = Just $ (0,1,0),
+  --  ambience4  = Nothing,
+  --  diffuse4   = Nothing,
+  --  specular4  = Just white,
+  --  emission4  = Just black,
+  --  shininess  = Just shininess'
+  --}
+  drawStation state 0.0 0.3 (1.5,0,0) (0,1,0)
 
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
@@ -291,7 +306,7 @@ draw state = do
   lighting $= Disabled
   ------------------------------------
   
-  --drawGrid 5
+  drawGrid 5
 
 
   
@@ -303,7 +318,7 @@ draw state = do
 
   --drawStation 0.0 0.5 (1,0,0) (0,1,0)
 
-  --drawFighter 0.5 (0.55, 0, 0) (0,1,0) ((-1), 0,0)
+  drawFighter 0.5 (0.55, 0, 0) (0,1,0) ((-1), 0,0)
   --drawFighter 0.7 (1, 0.7, 0) (1,0,0) (0,1,0)
   --drawFighter 0.5 (0,1,1) (1,1,1) (0,1,0)
 
