@@ -71,9 +71,9 @@ keyboard _     _                    _ _ _ = return ()
 
 modLightHeight :: State -> ChangeDirection -> IO ()
 modLightHeight state Decrease = do
-  ylight' state $~! (\x -> x - 5)
+  ylight' state $~! (\x -> x - 0.1)
 modLightHeight state Increase  = do
-  ylight' state $~! (+5)
+  ylight' state $~! (+0.1)
 
 modRotate :: State -> SpecialKey -> IO ()
 modRotate state KeyDown = do
