@@ -140,7 +140,6 @@ visible _     NotVisible = idleCallback $= Nothing
 reshape :: State -> ReshapeCallback
 reshape state s@(Size width height) = do
 
-
   if height > 0
     then asp state $~! (\x -> (fromIntegral width)/(fromIntegral height))
     else asp state $~! (\x -> 1)
@@ -222,20 +221,6 @@ draw state = do
   colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
   light (Light 0) $= Enabled
 
-
-
-  --drawStar $ ObjectAttributes {  
-  --  scaleSize  = (Just 0.5),
-  --  paint      = (Just (255, 255, 0)),
-  --  location   = (Just location),
-  --  noseVector = Nothing,
-  --  upVector   = Nothing,
-  --  ambience4  = Nothing,
-  --  diffuse4   = Nothing,
-  --  specular4  = Nothing,
-  --  shininess  = Nothing
-  --}
-
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = Just $ (Point4 255 255 0 0),
@@ -251,7 +236,6 @@ draw state = do
   drawCube 1.5 ((-1),0,0)
   drawPyramid 0.5 (1.5,0,0) (1,0,0) (0,1,0)
 
-  --drawSphere 0.5 0.5 (0,0,0)
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
     paint      = Just $ (Point4 1 1 1 0),

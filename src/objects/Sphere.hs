@@ -23,10 +23,10 @@ drawLatBand d (ph, th) =  do
   
 
 --Draw solid sphere
---drawSphere :: Float-> Float-> (Float, Float, Float) -> IO ()
---drawSphere s q (x, y, z) = do
 drawSphere :: State -> ObjectAttributes -> IO ()
 drawSphere state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 shininess) = do
+
+  let yellow = (Point4 1.0 1.0 0.0 1.0)
 
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do
