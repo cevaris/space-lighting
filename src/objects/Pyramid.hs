@@ -46,6 +46,21 @@ drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector u
           scale3f s s s
           multMatrix (mat :: GLmatrix GLfloat)
 
+          case specular4 of 
+            (Just point4) -> do 
+              materialSpecular Front $= pointToColor4f point4
+            _ -> postRedisplay Nothing
+
+          case emission4 of 
+            (Just point4) -> do 
+              materialEmission Front $= pointToColor4f point4
+            _ -> postRedisplay Nothing
+
+          case shininess of 
+            (Just sh) -> do 
+              materialShininess Front $= (iToGL sh)
+            _ -> postRedisplay Nothing
+
           renderPrimitive Triangles $ do
             
             -- Front

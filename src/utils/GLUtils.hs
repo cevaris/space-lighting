@@ -40,7 +40,7 @@ makeState = do
   zh <- newIORef 90
   fv <- newIORef 65
   as <- newIORef 1
-  di <- newIORef 2
+  di <- newIORef 1
   
   yl <- newIORef 0
   rl <- newIORef 5

@@ -343,6 +343,7 @@ draw state = do
       white    = (Point4 1 1 1 1)
       black    = (Point4 0 0 0 1)
       emiss    = (Point4 0.0 0.0 (0.01*emission) 1.0)
+      darkGray = (Point4 (105/255) (105/255) (105/255) 0)
 
 
   if lightStatus
@@ -365,17 +366,18 @@ draw state = do
 
     
   --drawFighter 1.5 (1, 0.7, 0) (1,0,0) (0,1,0)  
-
   drawFighter state $ ObjectAttributes {  
-    scaleSize  = Just 1.5,
-    paint      = Just $ (Point4 30 30 30 0),
-    location   = Just (0, 1, 1),
-    noseVector = Just (0, (-1), 1),
+    scaleSize  = Just 2,
+    paint      = Just darkGray,
+    location   = Just (0, 0, 0),
+    noseVector = Just (1, 0, 0),
+    --location   = Just (0, 1, 1),
+    --noseVector = Just (0, (-1), 1),
     upVector   = Just (0,1,0),
-    ambience4  = Nothing,
-    diffuse4   = Nothing,
-    specular4  = Nothing,
-    emission4  = Nothing,
+    ambience4  = Just white,
+    diffuse4   = Just white,
+    specular4  = Just white,
+    emission4  = Just white,
     shininess  = Just shine
   }
 
@@ -392,22 +394,22 @@ draw state = do
     shininess  = Just shine
   }
 
-  --drawCube state $ ObjectAttributes {  
-  --  scaleSize  = (Just 0.5),
-  --  paint      = Just $ (Point4 1 0 0 0),
-  --  location   = (Just ((-1.5), 0, 0)),
-  --  noseVector = Nothing,
-  --  upVector   = Nothing,
-  --  ambience4  = Nothing,
-  --  diffuse4   = Nothing,
-  --  specular4  = Just yellow,
-  --  emission4  = Just emiss,
-  --  shininess  = Just shine
-  --}
+  drawCube state $ ObjectAttributes {  
+    scaleSize  = (Just 0.5),
+    paint      = Just $ (Point4 1 0 0 0),
+    location   = (Just ((-1.5), 0, 0)),
+    noseVector = Nothing,
+    upVector   = Nothing,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Just yellow,
+    emission4  = Just emiss,
+    shininess  = Just shine
+  }
   
-  --drawStation state (fToGL gr) 0.3 (1.5,0,0)
+  drawStation state (fToGL gr) 0.3 (1.5,0,0)
 
-  --drawStation state (fToGL (gr*1.2)) 0.3 (1,1,1)
+  drawStation state (fToGL (gr*1.2)) 0.3 (1,1,1)
 
   --drawSphere state $ ObjectAttributes {  
   --  scaleSize  = (Just 0.5),

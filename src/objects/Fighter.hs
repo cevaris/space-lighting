@@ -51,25 +51,41 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
         scale3f s s s
         multMatrix (mat :: GLmatrix GLfloat)
 
-        --color3f 0 0 1
-        color3f (224/255) (223/255) (219/255)
         renderPrimitive Triangles $ do
+
+          -- Front
+          drawNormal3f 1 0 (cone/wid)
           drawVertex3f nose 0 0
           drawVertex3f cone wid wid
           drawVertex3f cone (-wid) wid
 
+          -- Back
+          drawNormal3f 1 0 (-cone/wid)
           drawVertex3f nose  0.0  0.0
           drawVertex3f cone  wid (-wid)
           drawVertex3f cone (-wid) (-wid)
 
+          -- Top
+          drawNormal3f 1 (cone/wid) 0
           drawVertex3f nose  0.0  0.0
           drawVertex3f cone  wid  wid
           drawVertex3f cone  wid (-wid)
 
+          -- Cockpit
+          color3f (30/255)  (30/255)  (30/255) 
+          drawNormal3f 1 (cone/wid) 0
+          drawVertex3f nose  0.0  0.0
+          drawVertex3f (cone*1.1)  (wid*1.05)  (wid*0.4)
+          drawVertex3f (cone*1.1)  (wid*1.05) (-(wid*0.4))
+          color3f cx cy cz
+
+          -- Bottom
+          drawNormal3f 1 (-cone/wid) 0
           drawVertex3f nose  0.0  0.0
           drawVertex3f cone (-wid) (wid)
           drawVertex3f cone (-wid) (-wid)
 
+        drawNormal3f 0 0 0
         renderPrimitive Quads $ do
           drawVertex3f cone  wid  wid
           drawVertex3f cone (-wid)  wid
@@ -98,7 +114,8 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
 
         --color3f 1 1 0
         --color3f (211/255) (211/255) (211/255)
-        color3f 1 0 0
+        --color3f 1 0 0
+        color3f cx cy cz
         renderPrimitive Triangles $ do
           drawVertex3f wing 0.0  wid
           drawVertex3f tail 0.0  wid
@@ -108,7 +125,8 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
           drawVertex3f tail 0.0 (-wid)
           drawVertex3f tail 0.0 (-0.5)
 
-        color3f 1 0 0
+        --color3f 1 0 0
+        color3f cx cy cz
         --color3f (211/255) (211/255) (211/255)
         renderPrimitive Polygon $ do
           drawVertex3f strk 0.0 0.0
