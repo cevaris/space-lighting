@@ -23,7 +23,6 @@ drawStarCluster state (xT, yT, zT) = do
         color3f 0 1 0
         translate $ vector3f (xT*x) (yT*y) (zT*z)
         scale3f (0.015*abs(x)) (0.015*abs(x)) (0.015*abs(x))
-        --drawSphere 1 4 (0,0,0)
 
         drawSphere state $ ObjectAttributes {  
           scaleSize  = (Just 0.5),

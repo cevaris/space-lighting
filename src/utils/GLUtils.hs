@@ -26,6 +26,7 @@ data State = State {
   smooth' :: IORef ShadingModel,
   light'  :: IORef Bool,
   shine'  :: IORef Int,
+  move'   :: IORef Bool,
    
   info    :: IORef (String,String)
 }
@@ -51,11 +52,13 @@ makeState = do
   sm <- newIORef Smooth
   li <- newIORef True
   sh <- newIORef 6
+  mv <- newIORef True
 
   i  <- newIORef ("","")
   return $ State {  
     frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, 
     ylight' = yl, rlight' = rl, emiss' = em, diff' = df, amb' = am, spec' = sp, smooth' = sm, light' = li, shine' = sh,
+    move' = mv,
     info = i
   }
 

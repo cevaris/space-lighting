@@ -63,13 +63,26 @@ keyboard state (Char 'N')           Up _ _ = modShininess state Increase
 keyboard state (Char 'e')           Up _ _ = modEmission state Decrease
 keyboard state (Char 'E')           Up _ _ = modEmission state Increase
 
+keyboard state (Char 'm')           keyState _ _ = toggleLightMovement state keyState
+keyboard state (Char 'M')           keyState _ _ = toggleLightMovement state keyState
+
 keyboard state (Char 'l')           keyState _ _ = toggleLight state keyState
 keyboard state (Char 'L')           keyState _ _ = toggleLight state keyState
+
 keyboard state (Char 'h')           keyState _ _ = toggleShading state keyState
 keyboard state (Char 'H')           keyState _ _ = toggleShading state keyState
 
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
+
+
+toggleLightMovement :: State -> KeyState -> IO ()
+toggleLightMovement state  Up = do
+  moveStatus <- get (move' state)
+  if moveStatus
+    then move' state $~! (\x -> False)
+    else move' state $~! (\x -> True)
+toggleLightMovement state Down = postRedisplay Nothing
 
 
 toggleShading :: State -> KeyState -> IO ()
@@ -176,11 +189,14 @@ idle state = do
   shine <- get (shine' state)
   emiss <- get (emiss' state)
   lightStatus <- get (light' state)
+  moveStatus <- get (move' state)
 
-  t <- get elapsedTime
-
-  let seconds = ((fromIntegral t))/1000.0
-  zh' state $~! (\x -> mod' (90*seconds) 360)
+  if moveStatus
+    then do 
+      t <- get elapsedTime
+      let seconds = ((fromIntegral t))/1000.0
+      zh' state $~! (\x -> mod' (90*seconds) 360)
+    else postRedisplay Nothing
 
   if fov' < 55
     then fov state $~! (\x -> 55)
@@ -273,6 +289,7 @@ updateInfo state = do
     ph <- get (ph' state)
     th <- get (th' state)
     gr <- get (gr' state)
+    zh <- get (zh' state)
     asp <- get (asp state)
     fov <- get (fov state)
     dim <- get (dim state)
@@ -287,8 +304,8 @@ updateInfo state = do
 
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
-        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [zoom " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] [shading " ++ show shadStatus ++  "] ",
-                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] [emission " ++ show emiss ++  "] ")
+        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [zh " ++ round2 zh ++ "] [zoom " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] [shading " ++ show shadStatus ++  "] ",
+                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] [emission " ++ show emiss ++  "] ")
     info state $= result
     t0 state $= t
     frames state $= 0
