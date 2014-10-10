@@ -34,8 +34,8 @@ makeState :: IO State
 makeState = do
   f  <- newIORef 0
   t  <- newIORef 0
-  ph <- newIORef 0
-  th <- newIORef 0
+  ph <- newIORef 20
+  th <- newIORef (-30)
   gr <- newIORef 0
   zh <- newIORef 90
   fv <- newIORef 65
@@ -46,11 +46,11 @@ makeState = do
   rl <- newIORef 5
   em <- newIORef 0
   df <- newIORef 45
-  am <- newIORef 10
-  sp <- newIORef 25
+  am <- newIORef 45
+  sp <- newIORef 55
   sm <- newIORef Smooth
   li <- newIORef True
-  sh <- newIORef 12
+  sh <- newIORef 6
 
   i  <- newIORef ("","")
   return $ State {  

@@ -469,7 +469,8 @@ draw state = do
 
 myInit :: [String] -> State -> IO ()
 myInit args state = do
-  clearColor $= Color4 0 0 0 0
+  --clearColor $= Color4 0 0 0 0
+  clearColor $= Color4 (100/255) (100/255) (100/255) 0
   depthFunc $= Just Less  
   
   
