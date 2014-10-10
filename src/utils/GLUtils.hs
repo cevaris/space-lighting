@@ -6,18 +6,6 @@ import Numeric
 import Graphics.Rendering.OpenGL.Raw.ARB.WindowPos
 import Graphics.UI.GLUT
 
---one       =   1    -- Unit value
---distance  =   5    -- Light distance
---inc       =  10    -- Ball increment
---smooth    =   1    -- Smooth/Flat shading
---local     =   0    -- Local Viewer Model
---emission  =   0    -- Emission intensity (%)
---ambience   =  30    -- Ambient intensity (%)
---diffusion   = 100    -- Diffuse intensity (%)
---specularizion  =   0    -- Specular intensity (%)
---shiny' =   0    -- Shininess (power of two)
-
-
 data State = State {
   frames  :: IORef Int,
   t0      :: IORef Int,

@@ -17,8 +17,8 @@ import GLUtils
 drawPyramid :: State -> ObjectAttributes -> IO ()
 drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
 
-  case (location, noseVector, upVector, scaleSize) of
-    ((Just (lx, ly, lz)), (Just (dx, dy, dz)), (Just (ux, uy, uz)), (Just s)) -> do 
+  case (location, noseVector, upVector, scaleSize, paint) of
+    ((Just (lx, ly, lz)), (Just (dx, dy, dz)), (Just (ux, uy, uz)), (Just s), (Just (Point4 cx cy cz ca))) -> do 
 
       let d0 = sqrt(dx*dx+dy*dy+dz*dz)
           x0 = dx/d0
@@ -40,7 +40,8 @@ drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector u
 
       preservingMatrix $ do
         preservingAttrib [AllServerAttributes] $ do
-
+          
+          color3f cx cy cz
           translate $ vector3f lx ly lz
           scale3f s s s
           multMatrix (mat :: GLmatrix GLfloat)

@@ -39,30 +39,32 @@ keyboard state (SpecialKey KeyDown) _ _ _ = modRotate state KeyDown
 keyboard state (SpecialKey KeyLeft) _ _ _ = modRotate state KeyLeft
 keyboard state (SpecialKey KeyRight)_ _ _ = modRotate state KeyRight
 
-keyboard state (Char 'z')           _ _ _ = modDim state Decrease
-keyboard state (Char 'Z')           _ _ _ = modDim state Increase
+keyboard state (Char 'z')           Up _ _ = modDim state Decrease
+keyboard state (Char 'Z')           Up _ _ = modDim state Increase
 
-keyboard state (Char 'f')           _ _ _ = modFov state Decrease
-keyboard state (Char 'F')           _ _ _ = modFov state Increase
+keyboard state (Char 'f')           Up _ _ = modFov state Decrease
+keyboard state (Char 'F')           Up _ _ = modFov state Increase
 
-keyboard state (Char '[')           _ _ _ = modLightHeight state Decrease
-keyboard state (Char ']')           _ _ _ = modLightHeight state Increase
+keyboard state (Char '[')           Up _ _ = modLightHeight state Decrease
+keyboard state (Char ']')           Up _ _ = modLightHeight state Increase
 
-keyboard state (Char 'r')           _ _ _ = modLightRadius state Decrease
-keyboard state (Char 'R')           _ _ _ = modLightRadius state Increase
+keyboard state (Char 'r')           Up _ _ = modLightRadius state Decrease
+keyboard state (Char 'R')           Up _ _ = modLightRadius state Increase
 
-keyboard state (Char 's')           _ _ _ = modSpecular state Decrease
-keyboard state (Char 'S')           _ _ _ = modSpecular state Increase
+keyboard state (Char 's')           Up _ _ = modSpecular state Decrease
+keyboard state (Char 'S')           Up _ _ = modSpecular state Increase
 
-keyboard state (Char 'd')           _ _ _ = modDiffusion state Decrease
-keyboard state (Char 'D')           _ _ _ = modDiffusion state Increase
+keyboard state (Char 'd')           Up _ _ = modDiffusion state Decrease
+keyboard state (Char 'D')           Up _ _ = modDiffusion state Increase
 
-keyboard state (Char 'a')           _ _ _ = modAmbience state Decrease
-keyboard state (Char 'A')           _ _ _ = modAmbience state Increase
+keyboard state (Char 'a')           Up _ _ = modAmbience state Decrease
+keyboard state (Char 'A')           Up _ _ = modAmbience state Increase
 
-keyboard state (Char 'n')           _ _ _ = modShininess state Decrease
-keyboard state (Char 'N')           _ _ _ = modShininess state Increase
+keyboard state (Char 'n')           Up _ _ = modShininess state Decrease
+keyboard state (Char 'N')           Up _ _ = modShininess state Increase
 
+keyboard state (Char 'e')           Up _ _ = modEmission state Decrease
+keyboard state (Char 'E')           Up _ _ = modEmission state Increase
 
 keyboard state (Char 'l')           keyState _ _ = toggleLight state keyState
 keyboard state (Char 'h')           keyState _ _ = toggleShading state keyState
@@ -87,6 +89,13 @@ toggleLight state  Up = do
     then light' state $~! (\x -> False)
     else light' state $~! (\x -> True)
 toggleLight state Down = postRedisplay Nothing
+
+
+modEmission :: State -> ChangeDirection -> IO ()
+modEmission state Decrease = do
+  emiss' state $~! (\x -> x - 5)
+modEmission state Increase  = do
+  emiss' state $~! (+5)  
 
 
 modShininess :: State -> ChangeDirection -> IO ()
@@ -166,6 +175,7 @@ idle state = do
   amb <- get (amb' state)
   diff <- get (diff' state)
   shine <- get (shine' state)
+  emiss <- get (emiss' state)
   lightStatus <- get (light' state)
 
   t <- get elapsedTime
@@ -217,6 +227,13 @@ idle state = do
       then shine' state $~! (\x -> 0)
       else postRedisplay Nothing
 
+  if emiss > 100
+    then emiss' state $~! (\x -> 100)
+    else if emiss < 0
+      then emiss' state $~! (\x -> 0)
+      else postRedisplay Nothing
+
+
   postRedisplay Nothing
 
 
@@ -265,13 +282,14 @@ updateInfo state = do
     amb <- get (amb' state)
     diff <- get (diff' state)
     shine <- get (shine' state)
+    emiss <- get (emiss' state)
     lightStatus <- get (light' state)
     shadStatus <- get (smooth' state)
 
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
-        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] ",
-                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] [shading " ++ show shadStatus ++  "] ")
+        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] [shading " ++ show shadStatus ++  "] ",
+                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] [emission " ++ show emiss ++  "] ")
     info state $= result
     t0 state $= t
     frames state $= 0
@@ -295,7 +313,10 @@ draw state = do
   diffusion <- get (diff' state)
   specularizion <- get (spec' state)
   emission <- get (emiss' state)
-  shine'   <- get (shine' state)
+  
+  shineVal   <- get (shine' state)
+  let shine = shineVal^2
+
 
   lightStatus <- get (light' state)
   shadeStatus <- get (smooth' state)
@@ -354,20 +375,20 @@ draw state = do
     diffuse4   = Nothing,
     specular4  = Nothing,
     emission4  = Nothing,
-    shininess  = Nothing
+    shininess  = Just shine
   }
 
   drawCube state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
-    paint      = Just $ (Point4 1 0 1 0),
+    paint      = Just $ (Point4 1 0 0 0),
     location   = (Just ((-1.5), 0, 0)),
     noseVector = Nothing,
     upVector   = Nothing,
     ambience4  = Nothing,
     diffuse4   = Nothing,
-    specular4  = Just white,
-    emission4  = Just black,
-    shininess  = Just shine'
+    specular4  = Just yellow,
+    emission4  = Just emiss,
+    shininess  = Just shine
   }
   
   drawStation state (fToGL gr) 0.3 (1.5,0,0)
@@ -382,9 +403,9 @@ draw state = do
     upVector   = Nothing,
     ambience4  = Nothing,
     diffuse4   = Nothing,
-    specular4  = Nothing,
-    emission4  = Just $ (Point4 0 0 (0.01*emission) 1),
-    shininess  = Nothing
+    specular4  = Just yellow,
+    emission4  = Just emiss,
+    shininess  = Just shine
   }
 
   drawFighter 1.0 (1, 0, 1) (0,1,0) (0, 1,0)
@@ -400,9 +421,9 @@ draw state = do
   
   --drawStar 0.5 (0, 1.5, 0)
 
-  --drawStarCluster (5, 1, 3)
-  --drawStarCluster (5, 5, 1)
-  --drawStarCluster (1, 5, 5)
+  drawStarCluster (5, 1, 3)
+  drawStarCluster (5, 5, 1)
+  drawStarCluster (1, 5, 5)
 
   --drawStation 0.0 0.5 (1,0,0) (0,1,0)
 
