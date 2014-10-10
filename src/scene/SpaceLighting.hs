@@ -26,16 +26,16 @@ data Direction = UpDirection | DownDirection | LeftDirection | RightDirection de
 fraction  = 0.1
 
 --lightEnabled =   True --  Lighting
-one       =   1    -- Unit value
---distance  =   5    -- Light distance
-inc       =  10    -- Ball increment
-smooth    =   1    -- Smooth/Flat shading
-local     =   0    -- Local Viewer Model
-emission  =   0    -- Emission intensity (%)
-ambience   =  30    -- Ambient intensity (%)
-diffusion   = 100    -- Diffuse intensity (%)
-specularizion  =   0    -- Specular intensity (%)
-shininess' =   0    -- Shininess (power of two)
+--one       =   1    -- Unit value
+----distance  =   5    -- Light distance
+--inc       =  10    -- Ball increment
+--smooth    =   1    -- Smooth/Flat shading
+--local     =   0    -- Local Viewer Model
+--emission  =   0    -- Emission intensity (%)
+--ambience   =  30    -- Ambient intensity (%)
+--diffusion   = 100    -- Diffuse intensity (%)
+--specularizion  =   0    -- Specular intensity (%)
+--shiny' =   0    -- Shininess (power of two)
 --ylight    =   0    -- Elevation of light
 --shinyvec[1]        -- Shininess (value)  
 
@@ -57,8 +57,8 @@ keyboard state (SpecialKey KeyDown) _ _ _ = modRotate state KeyDown
 keyboard state (SpecialKey KeyLeft) _ _ _ = modRotate state KeyLeft
 keyboard state (SpecialKey KeyRight)_ _ _ = modRotate state KeyRight
 
-keyboard state (Char 'd')           _ _ _ = modDim state Decrease
-keyboard state (Char 'D')           _ _ _ = modDim state Increase
+keyboard state (Char 'z')           _ _ _ = modDim state Decrease
+keyboard state (Char 'Z')           _ _ _ = modDim state Increase
 
 keyboard state (Char 'f')           _ _ _ = modFov state Decrease
 keyboard state (Char 'F')           _ _ _ = modFov state Increase
@@ -66,11 +66,29 @@ keyboard state (Char 'F')           _ _ _ = modFov state Increase
 keyboard state (Char '[')           _ _ _ = modLightHeight state Decrease
 keyboard state (Char ']')           _ _ _ = modLightHeight state Increase
 
-keyboard state (Char 'R')           _ _ _ = modLightRadius state Decrease
-keyboard state (Char 'r')           _ _ _ = modLightRadius state Increase
+keyboard state (Char 'r')           _ _ _ = modLightRadius state Decrease
+keyboard state (Char 'R')           _ _ _ = modLightRadius state Increase
+
+keyboard state (Char 's')           _ _ _ = modSpecular state Decrease
+keyboard state (Char 'S')           _ _ _ = modSpecular state Increase
+
+keyboard state (Char 'd')           _ _ _ = modDiffusion state Decrease
+keyboard state (Char 'D')           _ _ _ = modDiffusion state Increase
 
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
+
+modDiffusion :: State -> ChangeDirection -> IO ()
+modDiffusion state Decrease = do
+  diff' state $~! (\x -> x - 5)
+modDiffusion state Increase  = do
+  diff' state $~! (+5)
+
+modSpecular :: State -> ChangeDirection -> IO ()
+modSpecular state Decrease = do
+  spec' state $~! (\x -> x - 5)
+modSpecular state Increase  = do
+  spec' state $~! (+5)
 
 modLightRadius :: State -> ChangeDirection -> IO ()
 modLightRadius state Decrease = do
@@ -122,6 +140,8 @@ idle state = do
   dim' <- get (dim state)
   fov' <- get (fov state)
 
+  spec <- get (spec' state)
+
   t <- get elapsedTime
 
   let seconds = ((fromIntegral t))/1000.0
@@ -146,6 +166,12 @@ idle state = do
   if ((-360) > th || th > 360)
     then th' state $~! (\x -> 0)
     else postRedisplay Nothing
+
+  if spec > 100
+    then spec' state $~! (\x -> 100)
+    else if spec < 0
+      then spec' state $~! (\x -> 0)
+      else postRedisplay Nothing
 
   postRedisplay Nothing
 
@@ -190,10 +216,12 @@ updateInfo state = do
     asp <- get (asp state)
     fov <- get (fov state)
     dim <- get (dim state)
+    spec <- get (spec' state)
+
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
         result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [gr " ++ round2 gr ++ "]",
-                  "[asp " ++ show asp ++  "] [fov " ++ show fov ++  "] [ dim" ++ show dim ++  "] ")
+                  "[spec " ++ show spec ++  "] [fov " ++ show fov ++  "] [ dim" ++ show dim ++  "] ")
     info state $= result
     t0 state $= t
     frames state $= 0
@@ -210,8 +238,15 @@ draw state = do
   zh  <- get (zh' state)
   dim <- get (dim state)
   info <- get (info state)
+  
   ylight <- get (ylight' state)
   rlight <- get (rlight' state)
+  ambience <- get (amb' state)
+  diffusion <- get (diff' state)
+  specularizion <- get (spec' state)
+  emission <- get (emiss' state)
+  shine'   <- get (shine' state)
+
 
   loadIdentity
 
@@ -266,7 +301,7 @@ draw state = do
     diffuse4   = Nothing,
     specular4  = Just white,
     emission4  = Just black,
-    shininess  = Just shininess'
+    shininess  = Just shine'
   }
   
   drawStation state (fToGL gr) 0.3 (1.5,0,0)

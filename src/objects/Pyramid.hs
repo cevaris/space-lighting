@@ -44,10 +44,7 @@ drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector u
           translate $ vector3f lx ly lz
           scale3f s s s
           multMatrix (mat :: GLmatrix GLfloat)
-        --color3f px py pz
-        --translate $ vector3f lx ly lz
-        --scale3f s s s         
-          
+
           renderPrimitive Triangles $ do
             
             -- Front
@@ -76,7 +73,7 @@ drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector u
 
           renderPrimitive Quads $ do
 
-            --color3f 0 0 1
+            color3f 0 0 1
             
             drawNormal3f 0 (-0.5) 0
             drawVertex3f 1 (-1) 1

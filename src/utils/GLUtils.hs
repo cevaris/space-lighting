@@ -6,20 +6,40 @@ import Numeric
 import Graphics.Rendering.OpenGL.Raw.ARB.WindowPos
 import Graphics.UI.GLUT
 
+--one       =   1    -- Unit value
+--distance  =   5    -- Light distance
+--inc       =  10    -- Ball increment
+--smooth    =   1    -- Smooth/Flat shading
+--local     =   0    -- Local Viewer Model
+--emission  =   0    -- Emission intensity (%)
+--ambience   =  30    -- Ambient intensity (%)
+--diffusion   = 100    -- Diffuse intensity (%)
+--specularizion  =   0    -- Specular intensity (%)
+--shiny' =   0    -- Shininess (power of two)
+
 
 data State = State {
-   frames  :: IORef Int,
-   t0      :: IORef Int,
-   ph'     :: IORef Float,
-   th'     :: IORef Float,
-   gr'     :: IORef Float,
-   zh'     :: IORef Float,
-   asp     :: IORef Float,
-   fov     :: IORef Float,
-   dim     :: IORef Float,
-   ylight' :: IORef Float,
-   rlight' :: IORef Float,
-   info    :: IORef (String,String)
+  frames  :: IORef Int,
+  t0      :: IORef Int,
+  ph'     :: IORef Float,
+  th'     :: IORef Float,
+  gr'     :: IORef Float,
+  zh'     :: IORef Float,
+  asp     :: IORef Float,
+  fov     :: IORef Float,
+  dim     :: IORef Float,
+   
+  ylight' :: IORef Float,
+  rlight' :: IORef Float,
+  emiss'  :: IORef Float,
+  diff'   :: IORef Float,
+  amb'    :: IORef Float,
+  spec'   :: IORef Float,
+  smooth' :: IORef Bool,
+  light'  :: IORef Bool,
+  shine'  :: IORef Int,
+   
+  info    :: IORef (String,String)
 }
 
 makeState :: IO State
@@ -33,11 +53,22 @@ makeState = do
   fv <- newIORef 65
   as <- newIORef 1
   di <- newIORef 2
+  
   yl <- newIORef 0
   rl <- newIORef 5
+  em <- newIORef 0
+  df <- newIORef 100
+  am <- newIORef 30
+  sp <- newIORef 0
+  sm <- newIORef False
+  li <- newIORef True
+  sh <- newIORef 0
+
   i  <- newIORef ("","")
   return $ State {  
-    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, ylight' = yl, rlight' = rl, info = i
+    frames = f, t0 = t, ph' = ph, th' = th, gr' = gr, zh' = zh, asp = as, fov = fv, dim = di, 
+    ylight' = yl, rlight' = rl, emiss' = em, diff' = df, amb' = am, spec' = sp, smooth' = sm, light' = li, shine' = sh,
+    info = i
   }
 
 type Point3 = (Float, Float, Float)
