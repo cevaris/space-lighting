@@ -45,12 +45,12 @@ makeState = do
   yl <- newIORef 0
   rl <- newIORef 5
   em <- newIORef 0
-  df <- newIORef 100
-  am <- newIORef 30
-  sp <- newIORef 0
+  df <- newIORef 45
+  am <- newIORef 10
+  sp <- newIORef 25
   sm <- newIORef Smooth
   li <- newIORef True
-  sh <- newIORef 0
+  sh <- newIORef 12
 
   i  <- newIORef ("","")
   return $ State {  

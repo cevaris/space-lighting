@@ -132,15 +132,28 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
         color3f cx cy cz
         renderPrimitive Triangles $ do
 
+          -- Right Top Wing
           drawNormal3f 0 1 0
-          drawVertex3f wing 0.0  wid
-          drawVertex3f tail 0.0  wid
-          drawVertex3f tail 0.0  0.5
+          drawVertex3f wing 0.0001  wid
+          drawVertex3f tail 0.0001  wid
+          drawVertex3f tail 0.0001  0.5
+          -- Right Bottom Wing
+          drawNormal3f 0 (-1) 0
+          drawVertex3f wing (-0.0001)  wid
+          drawVertex3f tail (-0.0001)  wid
+          drawVertex3f tail (-0.0001)  0.5
 
+          -- Left Top Wing
           drawNormal3f 0 1 0
-          drawVertex3f wing 0.0 (-wid)
-          drawVertex3f tail 0.0 (-wid)
-          drawVertex3f tail 0.0 (-0.5)
+          drawVertex3f wing 0.0001 (-wid)
+          drawVertex3f tail 0.0001 (-wid)
+          drawVertex3f tail 0.0001 (-0.5)
+
+          -- Left Top Wing
+          drawNormal3f 0 (-1) 0
+          drawVertex3f wing (-0.0001) (-wid)
+          drawVertex3f tail (-0.0001) (-wid)
+          drawVertex3f tail (-0.0001) (-0.5)
 
         --color3f 1 0 0
         color3f cx cy cz

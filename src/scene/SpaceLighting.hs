@@ -42,9 +42,6 @@ keyboard state (SpecialKey KeyRight)_ _ _ = modRotate state KeyRight
 keyboard state (Char 'z')           Up _ _ = modDim state Decrease
 keyboard state (Char 'Z')           Up _ _ = modDim state Increase
 
-keyboard state (Char 'f')           Up _ _ = modFov state Decrease
-keyboard state (Char 'F')           Up _ _ = modFov state Increase
-
 keyboard state (Char '[')           Up _ _ = modLightHeight state Decrease
 keyboard state (Char ']')           Up _ _ = modLightHeight state Increase
 
@@ -67,7 +64,9 @@ keyboard state (Char 'e')           Up _ _ = modEmission state Decrease
 keyboard state (Char 'E')           Up _ _ = modEmission state Increase
 
 keyboard state (Char 'l')           keyState _ _ = toggleLight state keyState
+keyboard state (Char 'L')           keyState _ _ = toggleLight state keyState
 keyboard state (Char 'h')           keyState _ _ = toggleShading state keyState
+keyboard state (Char 'H')           keyState _ _ = toggleShading state keyState
 
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
@@ -288,7 +287,7 @@ updateInfo state = do
 
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
-        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] [shading " ++ show shadStatus ++  "] ",
+        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [zoom " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] [shading " ++ show shadStatus ++  "] ",
                   "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] [emission " ++ show emiss ++  "] ")
     info state $= result
     t0 state $= t
@@ -344,6 +343,7 @@ draw state = do
       black    = (Point4 0 0 0 1)
       emiss    = (Point4 0.0 0.0 (0.01*emission) 1.0)
       darkGray = (Point4 (50/255) (50/255) (50/255) 0)
+      snowGray = (Point4 (138/255) (138/255) (138/255) 0)
 
 
   if lightStatus
@@ -374,13 +374,26 @@ draw state = do
     upVector   = Just (0,1,0),
     ambience4  = Nothing,
     diffuse4   = Nothing,
-    specular4  = Just black,
+    specular4  = Just white,
+    emission4  = Just emiss,
+    shininess  = Just shine
+  }
+
+  drawFighter state $ ObjectAttributes {  
+    scaleSize  = Just 2,
+    paint      = Just darkGray,
+    location   = Just (0, (-1), 0),
+    noseVector = Just (0, 0, 1),
+    upVector   = Just (0,1,0),
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Just white,
     emission4  = Just emiss,
     shininess  = Just shine
   }
 
   drawSphere state $ ObjectAttributes {  
-    scaleSize  = (Just 0.5),
+    scaleSize  = (Just 0.25),
     paint      = Just $ (Point4 255 255 0 0),
     location   = (Just loc3),
     noseVector = Nothing,
