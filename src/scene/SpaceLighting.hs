@@ -16,29 +16,11 @@ import Sphere
 
 ----------------------------------------------------------------------------------------------------------------
 -- Global State
-
 data ChangeDirection = Increase | Decrease deriving (Show)
 
 data ProjectionView = PerspectiveView | OrthogonalView | FirstPersonView deriving (Show, Eq)
 
 data Direction = UpDirection | DownDirection | LeftDirection | RightDirection deriving (Show, Eq)
-
-fraction  = 0.1
-
---lightEnabled =   True --  Lighting
---one       =   1    -- Unit value
-----distance  =   5    -- Light distance
---inc       =  10    -- Ball increment
---smooth    =   1    -- Smooth/Flat shading
---local     =   0    -- Local Viewer Model
---emission  =   0    -- Emission intensity (%)
---ambience   =  30    -- Ambient intensity (%)
---diffusion   = 100    -- Diffuse intensity (%)
---specularizion  =   0    -- Specular intensity (%)
---shiny' =   0    -- Shininess (power of two)
---ylight    =   0    -- Elevation of light
---shinyvec[1]        -- Shininess (value)  
-
 
 ----------------------------------------------------------------------------------------------------------------
 -- Timer 
@@ -78,8 +60,30 @@ keyboard state (Char 'D')           _ _ _ = modDiffusion state Increase
 keyboard state (Char 'a')           _ _ _ = modAmbience state Decrease
 keyboard state (Char 'A')           _ _ _ = modAmbience state Increase
 
+keyboard state (Char 'n')           _ _ _ = modShininess state Decrease
+keyboard state (Char 'N')           _ _ _ = modShininess state Increase
+
+
+keyboard state (Char 'l')           keyState _ _ = toggleLight state keyState
+
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
+
+
+toggleLight :: State -> KeyState -> IO ()
+toggleLight state  Up = do
+  lightStatus <- get (light' state)
+  if lightStatus
+    then light' state $~! (\x -> False)
+    else light' state $~! (\x -> True)
+toggleLight state Down = postRedisplay Nothing
+
+
+modShininess :: State -> ChangeDirection -> IO ()
+modShininess state Decrease = do
+  shine' state $~! (\x -> x - 1)
+modShininess state Increase  = do
+  shine' state $~! (+1)  
 
 modAmbience :: State -> ChangeDirection -> IO ()
 modAmbience state Decrease = do
@@ -129,7 +133,6 @@ modFov state Increase = do
   fov state $~! (+2)
   postRedisplay Nothing  
 
-
 modDim :: State -> ChangeDirection -> IO ()
 modDim state Decrease = do
   dim state $~! (\x -> x - 0.1)
@@ -152,6 +155,8 @@ idle state = do
   spec <- get (spec' state)
   amb <- get (amb' state)
   diff <- get (diff' state)
+  shine <- get (shine' state)
+  lightStatus <- get (light' state)
 
   t <- get elapsedTime
 
@@ -194,6 +199,12 @@ idle state = do
     then amb' state $~! (\x -> 100)
     else if amb < 0
       then amb' state $~! (\x -> 0)
+      else postRedisplay Nothing
+
+  if shine > 100
+    then shine' state $~! (\x -> 100)
+    else if shine < 0
+      then shine' state $~! (\x -> 0)
       else postRedisplay Nothing
 
   postRedisplay Nothing
@@ -243,11 +254,13 @@ updateInfo state = do
     spec <- get (spec' state)
     amb <- get (amb' state)
     diff <- get (diff' state)
+    shine <- get (shine' state)
+    lightStatus <- get (light' state)
 
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
-        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "]",
-                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse" ++ show diff ++  "] ")
+        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] ",
+                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] ")
     info state $= result
     t0 state $= t
     frames state $= 0
@@ -273,6 +286,8 @@ draw state = do
   emission <- get (emiss' state)
   shine'   <- get (shine' state)
 
+  lightStatus <- get (light' state)
+
 
   loadIdentity
 
@@ -284,7 +299,7 @@ draw state = do
 
 
   ------------------------------------
-  shadeModel $= Smooth
+  --shadeModel $= Smooth
 
   let ambs     = (Point4 (0.01*ambience) (0.01*ambience) (0.01*ambience) 1.0)
       diffs    = (Point4 (0.01*diffusion) (0.01*diffusion) (0.01*diffusion) 1.0)
@@ -297,11 +312,25 @@ draw state = do
       emiss    = (Point4 0.0 0.0 (0.01*emission) 1.0)
 
 
-  normalize $= Enabled
-  lighting $= Enabled
-  lightModelLocalViewer $= Enabled
-  colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
-  light (Light 0) $= Enabled
+  if lightStatus
+    then do
+      normalize $= Enabled
+      lighting $= Enabled
+      lightModelLocalViewer $= Enabled
+      colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
+      light (Light 0) $= Enabled
+
+      shadeModel $= Smooth
+
+      ambient4f ambs
+      specular4f specs
+      diffuse4f diffs
+      position4f loc4
+    else do
+      lighting $= Disabled
+
+
+    
 
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
@@ -316,10 +345,9 @@ draw state = do
     shininess  = Nothing
   }
 
-  --drawCube 1.5 ((-1),0,0)
   drawCube state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
-    paint      = Just $ (Point4 1 1 1 0),
+    paint      = Just $ (Point4 1 0 1 0),
     location   = (Just ((-1.5), 0, 0)),
     noseVector = Nothing,
     upVector   = Nothing,
@@ -336,7 +364,7 @@ draw state = do
 
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
-    paint      = Just $ (Point4 1 1 1 0),
+    paint      = Just $ (Point4 1 1 1 1),
     location   = (Just (0, 0, 0)),
     noseVector = Nothing,
     upVector   = Nothing,
@@ -347,10 +375,9 @@ draw state = do
     shininess  = Nothing
   }
 
-  ambient4f ambs
-  specular4f specs
-  diffuse4f diffs
-  position4f loc4
+  drawFighter 1.0 (1, 0, 1) (0,1,0) (0, 1,0)
+
+  
 
   lighting $= Disabled
   ------------------------------------
@@ -367,7 +394,7 @@ draw state = do
 
   --drawStation 0.0 0.5 (1,0,0) (0,1,0)
 
-  drawFighter 0.5 (0.55, 0, 0) (0,1,0) ((-1), 0,0)
+  
   --drawFighter 0.7 (1, 0.7, 0) (1,0,0) (0,1,0)
   --drawFighter 0.5 (0,1,1) (1,1,1) (0,1,0)
 
@@ -385,15 +412,7 @@ draw state = do
 myInit :: [String] -> State -> IO ()
 myInit args state = do
   clearColor $= Color4 0 0 0 0
-  depthFunc $= Just Less
-  
-  --normalize $= Enabled
-  --lighting $= Enabled
-  --lightModelLocalViewer $= Enabled
-  --colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
-  --light (Light 0) $= Enabled
-  
-  --autoNormal $= Enabled
+  depthFunc $= Just Less  
   
   
 
@@ -413,6 +432,7 @@ main = do
     reshapeCallback $= Just (reshape state)
     
     keyboardMouseCallback $= Just (keyboard state)
+    --keyboardUpCallback $= Just (keyboard state)
     visibilityCallback $= Just (visible state)
     mainLoop
   

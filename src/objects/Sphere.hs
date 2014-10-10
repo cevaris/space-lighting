@@ -57,20 +57,3 @@ drawSphere state object@(ObjectAttributes scaleSize paint location noseVector up
           mapM_ (\ph -> do
               renderPrimitive QuadStrip $ mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)
             ) (spherePh q)
-          
-          --drawSphere s 0.5 (0,0,0)
-        _ -> putStrLn $ "Start Light case Fail: " ++ (show object)
-
-      
-
-
-      --translate $ vector3f x y z
-      --scale3f s s s
-
-      --mapM_ (\ph -> do
-      --    renderPrimitive QuadStrip $ mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)
-      --  ) (spherePh q)
-
-        
-            
-      

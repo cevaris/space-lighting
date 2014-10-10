@@ -72,7 +72,6 @@ makeState = do
   }
 
 type Point3 = (Float, Float, Float)
---type Point4 = (Float, Float, Float, Float)
 data Point4 = Point4 Float Float Float Float deriving (Show, Eq)
 
 type Scale      = Maybe Float
