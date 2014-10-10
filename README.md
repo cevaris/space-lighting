@@ -12,32 +12,30 @@ A Haskell OpenGL/GLUT implementation Space 3D Scene with lighting effects
 
 
 ## Assignment Length
-
+~20 hours
 
 
   
 ### Key Bindings
 
-| Command       | Key Binding   |
-| ------------- |:-------------:|
-| Close App     | ESC           |
-| Rotate Right  | Right Arrow   |
-| Rotate Left   | Left Arrow    |
-| Rotate Down   | Down Arrow    |
-| Rotate Up     | Up Arrow      |
-| Toggle Light  | l or L             |
-| Toggle Shade Model  | h or H            |
-| Zoom In/Out              | z/Z               |
-| Ambient Decrease/Increase              | a/A                |
-| Diffuse Decrease/Increase              | d/D              |
-| Specular Decrease/Increase              | s/S              |
-| Emission Decrease/Increase              | e/E             |
-| Shininess Decrease/Increase              | n/N              |
-| Light Ball Radius Decrease/Increase              | r/R               |
-| Light Ball Height Decrease/Increase              | [/]              |
-|               |               |
-|               |               |
-|               |               |
+| Command                             | Key Binding   |
+| ------------------------------------|:-------------:|
+| Close App                           | ESC           |
+| Rotate Right                        | Right Arrow   |
+| Rotate Left                         | Left Arrow    |
+| Rotate Down                         | Down Arrow    |
+| Rotate Up                           | Up Arrow      |
+| Toggle Light                        | l or L        |
+| Toggle Shade Model                  | h or H        | 
+| Zoom In/Out                         | z/Z           |
+| Ambient Decrease/Increase           | a/A           |
+| Diffuse Decrease/Increase           | d/D           |
+| Specular Decrease/Increase          | s/S           |
+| Emission Decrease/Increase          | e/E           |
+| Shininess Decrease/Increase         | n/N           |
+| Light Ball Radius Decrease/Increase | r/R           |
+| Light Ball Height Decrease/Increase | [/]           |
+
 
     
 
