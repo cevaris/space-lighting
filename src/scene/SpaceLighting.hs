@@ -75,8 +75,17 @@ keyboard state (Char 'S')           _ _ _ = modSpecular state Increase
 keyboard state (Char 'd')           _ _ _ = modDiffusion state Decrease
 keyboard state (Char 'D')           _ _ _ = modDiffusion state Increase
 
+keyboard state (Char 'a')           _ _ _ = modAmbience state Decrease
+keyboard state (Char 'A')           _ _ _ = modAmbience state Increase
+
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
+
+modAmbience :: State -> ChangeDirection -> IO ()
+modAmbience state Decrease = do
+  amb' state $~! (\x -> x - 5)
+modAmbience state Increase  = do
+  amb' state $~! (+5)
 
 modDiffusion :: State -> ChangeDirection -> IO ()
 modDiffusion state Decrease = do
@@ -141,6 +150,8 @@ idle state = do
   fov' <- get (fov state)
 
   spec <- get (spec' state)
+  amb <- get (amb' state)
+  diff <- get (diff' state)
 
   t <- get elapsedTime
 
@@ -171,6 +182,18 @@ idle state = do
     then spec' state $~! (\x -> 100)
     else if spec < 0
       then spec' state $~! (\x -> 0)
+      else postRedisplay Nothing
+
+  if diff > 100
+    then diff' state $~! (\x -> 100)
+    else if diff < 0
+      then diff' state $~! (\x -> 0)
+      else postRedisplay Nothing
+
+  if amb > 100
+    then amb' state $~! (\x -> 100)
+    else if amb < 0
+      then amb' state $~! (\x -> 0)
       else postRedisplay Nothing
 
   postRedisplay Nothing
@@ -216,12 +239,15 @@ updateInfo state = do
     asp <- get (asp state)
     fov <- get (fov state)
     dim <- get (dim state)
+    
     spec <- get (spec' state)
+    amb <- get (amb' state)
+    diff <- get (diff' state)
 
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
-        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [gr " ++ round2 gr ++ "]",
-                  "[spec " ++ show spec ++  "] [fov " ++ show fov ++  "] [ dim" ++ show dim ++  "] ")
+        result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "]",
+                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse" ++ show diff ++  "] ")
     info state $= result
     t0 state $= t
     frames state $= 0
