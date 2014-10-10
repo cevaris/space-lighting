@@ -12,7 +12,7 @@ import GLUtils
 --  nose towards (dx,dy,dz)
 --  up towards (ux,uy,uz)
 drawFighter :: State -> ObjectAttributes -> IO ()
-drawFighter state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
+drawFighter state object@(ObjectAttributes scaleSize paint location noseVector upVector _ _ _ _ _) = do
   
 
   case (location, noseVector, upVector, scaleSize, paint) of
@@ -41,6 +41,10 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
                                        y0, y1,  y2, 0,
                                        z0, z1,  z2, 0,
                                        0,  0,   0,  1]
+
+
+    drawLightingEffects object
+
 
     preservingMatrix $ do
       preservingAttrib [AllServerAttributes] $ do
@@ -72,7 +76,7 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
           drawVertex3f cone  wid (-wid)
 
           -- Cockpit
-          color3f (30/255)  (30/255)  (30/255) 
+          color3f (0/255)  (0/255)  (0/255) 
           drawNormal3f 1 (cone/wid) 0
           drawVertex3f nose  0.0  0.0
           drawVertex3f (cone*1.1)  (wid*1.05)  (wid*0.4)
@@ -85,28 +89,38 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
           drawVertex3f cone (-wid) (wid)
           drawVertex3f cone (-wid) (-wid)
 
-        drawNormal3f 0 0 0
+        
         renderPrimitive Quads $ do
+          -- Front
+          drawNormal3f 0 0 1
           drawVertex3f cone  wid  wid
           drawVertex3f cone (-wid)  wid
           drawVertex3f tail (-wid)  wid
           drawVertex3f tail  wid  wid
 
+          -- Back
+          drawNormal3f 0 0 (-1)
           drawVertex3f cone  wid (-wid)
           drawVertex3f cone (-wid) (-wid)
           drawVertex3f tail (-wid) (-wid)
           drawVertex3f tail  wid (-wid)
 
+          -- Top
+          drawNormal3f 0 1 0
           drawVertex3f cone  wid  wid
           drawVertex3f cone  wid (-wid)
           drawVertex3f tail  wid (-wid)
           drawVertex3f tail  wid  wid
 
+          -- Bottom
+          drawNormal3f 0 (-1) 0
           drawVertex3f cone (-wid)  wid
           drawVertex3f cone (-wid) (-wid)
           drawVertex3f tail (-wid) (-wid)
           drawVertex3f tail (-wid)  wid
 
+          -- Tail Cap
+          drawNormal3f (-1) 0 0
           drawVertex3f tail (-wid)  wid
           drawVertex3f tail  wid  wid
           drawVertex3f tail  wid (-wid)
@@ -117,10 +131,13 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
         --color3f 1 0 0
         color3f cx cy cz
         renderPrimitive Triangles $ do
+
+          drawNormal3f 0 1 0
           drawVertex3f wing 0.0  wid
           drawVertex3f tail 0.0  wid
           drawVertex3f tail 0.0  0.5
 
+          drawNormal3f 0 1 0
           drawVertex3f wing 0.0 (-wid)
           drawVertex3f tail 0.0 (-wid)
           drawVertex3f tail 0.0 (-0.5)
@@ -128,10 +145,16 @@ drawFighter state object@(ObjectAttributes scaleSize paint location noseVector u
         --color3f 1 0 0
         color3f cx cy cz
         --color3f (211/255) (211/255) (211/255)
-        renderPrimitive Polygon $ do
-          drawVertex3f strk 0.0 0.0
-          drawVertex3f tail 0.3 0.0
-          drawVertex3f tail 0.0 0.0
+        renderPrimitive Triangles $ do
+          drawNormal3f 0 0 1
+          drawVertex3f strk 0.0 0.0001
+          drawVertex3f tail 0.3 0.0001
+          drawVertex3f tail 0.0 0.0001
+
+          drawNormal3f 0 0 (-1)
+          drawVertex3f strk 0.0 (-0.0001)
+          drawVertex3f tail 0.3 (-0.0001)
+          drawVertex3f tail 0.0 (-0.0001)
         
 
 

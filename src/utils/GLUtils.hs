@@ -40,7 +40,7 @@ makeState = do
   zh <- newIORef 90
   fv <- newIORef 65
   as <- newIORef 1
-  di <- newIORef 1
+  di <- newIORef 2
   
   yl <- newIORef 0
   rl <- newIORef 5
@@ -105,6 +105,35 @@ glSin x = sin(3.1415927/180*x)
 
 toDeg :: Float -> Float
 toDeg x = x*(3.1415927/180)
+
+drawLightingEffects :: ObjectAttributes -> IO ()
+drawLightingEffects object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
+  
+  case shininess of 
+      (Just sh) -> do 
+        materialShininess FrontAndBack $= (iToGL sh)
+      _ -> postRedisplay Nothing
+
+  case specular4 of 
+    (Just point4) -> do 
+      materialSpecular FrontAndBack $= pointToColor4f point4
+    _ -> postRedisplay Nothing
+
+  case diffuse4 of 
+    (Just point4) -> do 
+      materialDiffuse FrontAndBack $= pointToColor4f point4
+    _ -> postRedisplay Nothing
+
+  case ambience4 of 
+    (Just point4) -> do 
+      materialAmbient FrontAndBack $= pointToColor4f point4
+    _ -> postRedisplay Nothing
+
+  case emission4 of 
+    (Just point4) -> do 
+      materialEmission FrontAndBack $= pointToColor4f point4
+    _ -> postRedisplay Nothing
+
 
 drawNormal3f :: Float -> Float -> Float -> IO ()
 drawNormal3f x y z = currentNormal $= Normal3 ((realToFrac x)::GLfloat) ((realToFrac y)::GLfloat) ((realToFrac z)::GLfloat)

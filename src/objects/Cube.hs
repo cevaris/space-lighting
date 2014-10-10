@@ -8,28 +8,15 @@ import GLUtils
 --drawCube :: Float -> (Float, Float, Float) -> IO ()
 --drawCube s (x, y, z) = do
 drawCube :: State -> ObjectAttributes -> IO ()
-drawCube state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
+drawCube state object@(ObjectAttributes scaleSize paint location noseVector upVector _ _ _ _ _) = do
 
   let w = 1.0
 
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do
 
-      case shininess of 
-        (Just sh) -> do 
-          materialShininess FrontAndBack $= (iToGL sh)
-        _ -> postRedisplay Nothing
-
-      case specular4 of 
-        (Just point4) -> do 
-          materialSpecular FrontAndBack $= pointToColor4f point4
-        _ -> postRedisplay Nothing
-
-      case emission4 of 
-        (Just point4) -> do 
-          materialEmission FrontAndBack $= pointToColor4f point4
-        _ -> postRedisplay Nothing
-
+      drawLightingEffects object
+        
       case (paint, location, scaleSize) of
         ((Just (Point4 px py pz pa)), (Just (lx, ly, lz)), (Just s)) -> do 
           color3f px py pz

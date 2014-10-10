@@ -343,7 +343,7 @@ draw state = do
       white    = (Point4 1 1 1 1)
       black    = (Point4 0 0 0 1)
       emiss    = (Point4 0.0 0.0 (0.01*emission) 1.0)
-      darkGray = (Point4 (105/255) (105/255) (105/255) 0)
+      darkGray = (Point4 (50/255) (50/255) (50/255) 0)
 
 
   if lightStatus
@@ -369,15 +369,13 @@ draw state = do
   drawFighter state $ ObjectAttributes {  
     scaleSize  = Just 2,
     paint      = Just darkGray,
-    location   = Just (0, 0, 0),
-    noseVector = Just (1, 0, 0),
-    --location   = Just (0, 1, 1),
-    --noseVector = Just (0, (-1), 1),
+    location   = Just (0, 1, 1),
+    noseVector = Just (0, (-1), 1),
     upVector   = Just (0,1,0),
-    ambience4  = Just white,
-    diffuse4   = Just white,
-    specular4  = Just white,
-    emission4  = Just white,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Just black,
+    emission4  = Just emiss,
     shininess  = Just shine
   }
 
@@ -411,18 +409,18 @@ draw state = do
 
   drawStation state (fToGL (gr*1.2)) 0.3 (1,1,1)
 
-  --drawSphere state $ ObjectAttributes {  
-  --  scaleSize  = (Just 0.5),
-  --  paint      = Just $ (Point4 1 1 1 1),
-  --  location   = (Just (0, 0, 0)),
-  --  noseVector = Nothing,
-  --  upVector   = Nothing,
-  --  ambience4  = Nothing,
-  --  diffuse4   = Nothing,
-  --  specular4  = Just yellow,
-  --  emission4  = Just emiss,
-  --  shininess  = Just shine
-  --}
+  drawSphere state $ ObjectAttributes {  
+    scaleSize  = (Just 0.5),
+    paint      = Just $ (Point4 1 1 1 1),
+    location   = (Just (0, 0, 0)),
+    noseVector = Nothing,
+    upVector   = Nothing,
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Just yellow,
+    emission4  = Just emiss,
+    shininess  = Just shine
+  }
 
   
 
@@ -435,9 +433,9 @@ draw state = do
   
   --drawStar 0.5 (0, 1.5, 0)
 
-  --drawStarCluster (5, 1, 3)
-  --drawStarCluster (5, 5, 1)
-  --drawStarCluster (1, 5, 5)
+  --drawStarCluster state (5, 1, 3)
+  --drawStarCluster state (5, 5, 1)
+  --drawStarCluster state (1, 5, 5)
 
   --drawStation 0.0 0.5 (1,0,0) (0,1,0)
 

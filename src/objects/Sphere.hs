@@ -26,11 +26,9 @@ drawLatBand d (ph, th) =  do
 drawSphere :: State -> ObjectAttributes -> IO ()
 drawSphere state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
 
-  let yellow = (Point4 1.0 1.0 0.0 1.0)
-
   preservingMatrix $ do
     preservingAttrib [AllServerAttributes] $ do
-      let q = 0.5
+      let q = 0.25
 
       case (paint, location, scaleSize) of
         ((Just (Point4 px py pz pa)), (Just (lx, ly, lz)), (Just s))-> do 
@@ -38,21 +36,7 @@ drawSphere state object@(ObjectAttributes scaleSize paint location noseVector up
           translate $ vector3f lx ly lz
           scale3f s s s
 
-          case specular4 of 
-            (Just point4) -> do 
-              materialSpecular Front $= pointToColor4f point4
-            _ -> postRedisplay Nothing
-
-          case emission4 of 
-            (Just point4) -> do 
-              materialEmission Front $= pointToColor4f point4
-            _ -> postRedisplay Nothing
-
-          case shininess of 
-            (Just sh) -> do 
-              materialShininess Front $= (iToGL sh)
-            _ -> postRedisplay Nothing
-          
+          drawLightingEffects object
 
           mapM_ (\ph -> do
               renderPrimitive QuadStrip $ mapM_ (\th -> drawLatBand q (ph, th)) (sphereTh q)

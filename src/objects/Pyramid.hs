@@ -15,7 +15,7 @@ import GLUtils
 --               (Float, Float, Float) -> IO ()
 --drawPyramid s (x, y, z) (dx, dy, dz) (ux, uy, uz) = do
 drawPyramid :: State -> ObjectAttributes -> IO ()
-drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector upVector ambience4 diffuse4 specular4 emission4 shininess) = do
+drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector upVector _ _ _ _ _) = do
 
   case (location, noseVector, upVector, scaleSize, paint) of
     ((Just (lx, ly, lz)), (Just (dx, dy, dz)), (Just (ux, uy, uz)), (Just s), (Just (Point4 cx cy cz ca))) -> do 
@@ -46,20 +46,7 @@ drawPyramid state object@(ObjectAttributes scaleSize paint location noseVector u
           scale3f s s s
           multMatrix (mat :: GLmatrix GLfloat)
 
-          case specular4 of 
-            (Just point4) -> do 
-              materialSpecular Front $= pointToColor4f point4
-            _ -> postRedisplay Nothing
-
-          case emission4 of 
-            (Just point4) -> do 
-              materialEmission Front $= pointToColor4f point4
-            _ -> postRedisplay Nothing
-
-          case shininess of 
-            (Just sh) -> do 
-              materialShininess Front $= (iToGL sh)
-            _ -> postRedisplay Nothing
+          drawLightingEffects object
 
           renderPrimitive Triangles $ do
             
