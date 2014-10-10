@@ -364,7 +364,20 @@ draw state = do
 
 
     
-  drawFighter 1.5 (1, 0.7, 0) (1,0,0) (0,1,0)  
+  --drawFighter 1.5 (1, 0.7, 0) (1,0,0) (0,1,0)  
+
+  drawFighter state $ ObjectAttributes {  
+    scaleSize  = Just 1.5,
+    paint      = Just $ (Point4 30 30 30 0),
+    location   = Just (0, 1, 1),
+    noseVector = Just (0, (-1), 1),
+    upVector   = Just (0,1,0),
+    ambience4  = Nothing,
+    diffuse4   = Nothing,
+    specular4  = Nothing,
+    emission4  = Nothing,
+    shininess  = Just shine
+  }
 
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
