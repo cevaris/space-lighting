@@ -65,9 +65,19 @@ keyboard state (Char 'N')           _ _ _ = modShininess state Increase
 
 
 keyboard state (Char 'l')           keyState _ _ = toggleLight state keyState
+keyboard state (Char 'h')           keyState _ _ = toggleShading state keyState
 
 keyboard _     (Char '\27')         _ _ _ = exitWith ExitSuccess
 keyboard _     _                    _ _ _ = return ()
+
+
+toggleShading :: State -> KeyState -> IO ()
+toggleShading state  Up = do
+  smoothStatus <- get (smooth' state)
+  if smoothStatus == Smooth
+    then smooth' state $~! (\x -> Flat)
+    else smooth' state $~! (\x -> Smooth)
+toggleShading state Down = postRedisplay Nothing
 
 
 toggleLight :: State -> KeyState -> IO ()
@@ -256,11 +266,12 @@ updateInfo state = do
     diff <- get (diff' state)
     shine <- get (shine' state)
     lightStatus <- get (light' state)
+    shadStatus <- get (smooth' state)
 
     let seconds = fromIntegral (t - t0') / 1000 :: GLfloat
         fps = fromIntegral f / seconds
         result = ("[ph " ++ round2 ph ++ "] [th " ++ round2 th ++ "] [dim " ++ show dim ++ "] [lightStatus " ++ show lightStatus ++  "] ",
-                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] ")
+                  "[specular " ++ show spec ++  "] [ambience " ++ show amb ++  "] [ diffuse " ++ show diff ++  "] [shininess " ++ show shine ++  "] [shading " ++ show shadStatus ++  "] ")
     info state $= result
     t0 state $= t
     frames state $= 0
@@ -287,6 +298,7 @@ draw state = do
   shine'   <- get (shine' state)
 
   lightStatus <- get (light' state)
+  shadeStatus <- get (smooth' state)
 
 
   loadIdentity
@@ -320,7 +332,7 @@ draw state = do
       colorMaterial $= Just (FrontAndBack, AmbientAndDiffuse)
       light (Light 0) $= Enabled
 
-      shadeModel $= Smooth
+      shadeModel $= shadeStatus
 
       ambient4f ambs
       specular4f specs

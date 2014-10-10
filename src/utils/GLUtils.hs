@@ -35,7 +35,7 @@ data State = State {
   diff'   :: IORef Float,
   amb'    :: IORef Float,
   spec'   :: IORef Float,
-  smooth' :: IORef Bool,
+  smooth' :: IORef ShadingModel,
   light'  :: IORef Bool,
   shine'  :: IORef Int,
    
@@ -60,7 +60,7 @@ makeState = do
   df <- newIORef 100
   am <- newIORef 30
   sp <- newIORef 0
-  sm <- newIORef False
+  sm <- newIORef Smooth
   li <- newIORef True
   sh <- newIORef 0
 
