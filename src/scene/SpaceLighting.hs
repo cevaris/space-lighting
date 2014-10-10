@@ -364,6 +364,7 @@ draw state = do
 
 
     
+  drawFighter 1.5 (1, 0.7, 0) (1,0,0) (0,1,0)  
 
   drawSphere state $ ObjectAttributes {  
     scaleSize  = (Just 0.5),
@@ -378,37 +379,35 @@ draw state = do
     shininess  = Just shine
   }
 
-  drawCube state $ ObjectAttributes {  
-    scaleSize  = (Just 0.5),
-    paint      = Just $ (Point4 1 0 0 0),
-    location   = (Just ((-1.5), 0, 0)),
-    noseVector = Nothing,
-    upVector   = Nothing,
-    ambience4  = Nothing,
-    diffuse4   = Nothing,
-    specular4  = Just yellow,
-    emission4  = Just emiss,
-    shininess  = Just shine
-  }
+  --drawCube state $ ObjectAttributes {  
+  --  scaleSize  = (Just 0.5),
+  --  paint      = Just $ (Point4 1 0 0 0),
+  --  location   = (Just ((-1.5), 0, 0)),
+  --  noseVector = Nothing,
+  --  upVector   = Nothing,
+  --  ambience4  = Nothing,
+  --  diffuse4   = Nothing,
+  --  specular4  = Just yellow,
+  --  emission4  = Just emiss,
+  --  shininess  = Just shine
+  --}
   
-  drawStation state (fToGL gr) 0.3 (1.5,0,0)
+  --drawStation state (fToGL gr) 0.3 (1.5,0,0)
 
-  drawStation state (fToGL (gr*1.2)) 0.3 (1,1,1)
+  --drawStation state (fToGL (gr*1.2)) 0.3 (1,1,1)
 
-  drawSphere state $ ObjectAttributes {  
-    scaleSize  = (Just 0.5),
-    paint      = Just $ (Point4 1 1 1 1),
-    location   = (Just (0, 0, 0)),
-    noseVector = Nothing,
-    upVector   = Nothing,
-    ambience4  = Nothing,
-    diffuse4   = Nothing,
-    specular4  = Just yellow,
-    emission4  = Just emiss,
-    shininess  = Just shine
-  }
-
-  drawFighter 1.0 (1, 0, 1) (0,1,0) (0, 1,0)
+  --drawSphere state $ ObjectAttributes {  
+  --  scaleSize  = (Just 0.5),
+  --  paint      = Just $ (Point4 1 1 1 1),
+  --  location   = (Just (0, 0, 0)),
+  --  noseVector = Nothing,
+  --  upVector   = Nothing,
+  --  ambience4  = Nothing,
+  --  diffuse4   = Nothing,
+  --  specular4  = Just yellow,
+  --  emission4  = Just emiss,
+  --  shininess  = Just shine
+  --}
 
   
 
@@ -421,9 +420,9 @@ draw state = do
   
   --drawStar 0.5 (0, 1.5, 0)
 
-  drawStarCluster (5, 1, 3)
-  drawStarCluster (5, 5, 1)
-  drawStarCluster (1, 5, 5)
+  --drawStarCluster (5, 1, 3)
+  --drawStarCluster (5, 5, 1)
+  --drawStarCluster (1, 5, 5)
 
   --drawStation 0.0 0.5 (1,0,0) (0,1,0)
 
